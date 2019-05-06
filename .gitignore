@@ -1,0 +1,6 @@
+.venv
+*.ipynb*
+proposal/*.ipynb*
+*.html
+proposal/*.html
+.doit*
