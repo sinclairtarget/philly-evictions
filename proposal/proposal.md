@@ -101,7 +101,7 @@ import matplotlib.pyplot as plt
 pd.options.display.float_format = '{:,}'.format
 
 # Load data
-df = pd.read_csv('data/block-groups_pa.csv')
+df = pd.read_csv('../data/block-groups_pa.csv')
 
 # Limit to Philadelphia and 2002-2016
 df = df[df['parent-location'] == 'Philadelphia County, Pennsylvania']
