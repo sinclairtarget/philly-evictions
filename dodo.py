@@ -29,3 +29,16 @@ def task_sync_proposal():
         ],
         'clean': True
     }
+
+
+def task_fetch_acs():
+    """Fetches ACS data using the fetch script."""
+    target = 'data/acs.csv'
+    dep = 'fetch_acs.py'
+    return {
+        'file_dep': [dep],
+        'targets': [target],
+        'actions': [
+            f"python {dep} > {target}"
+        ]
+    }
