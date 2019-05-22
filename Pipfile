@@ -17,6 +17,7 @@ sklearn = "*"
 jupytext = "*"
 doit = "*"
 jupyter = "*"
+census = "*"
 
 [requires]
 python_version = "3.7"
