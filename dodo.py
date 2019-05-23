@@ -31,10 +31,10 @@ def task_sync_proposal():
     }
 
 
-def task_fetch_acs():
-    """Fetches ACS data using the fetch script."""
+def task_fetch_acs_from_api():
+    """Fetches ACS data using the fetch from API script."""
     target = 'data/acs.csv'
-    dep = 'fetch_acs.py'
+    dep = 'acs/fetch_from_api.py'
     return {
         'file_dep': [dep],
         'targets': [target],

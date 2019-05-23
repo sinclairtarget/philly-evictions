@@ -1,10 +1,13 @@
 """
-This script fetches five-year ACS estimate data (at the blockgroup level) for
-2013 to 2016, which is all that is available via the Census API.
+This script uses the Census API to fetch five-year ACS estimate data (at the
+blockgroup level) for 2013 to 2016. These years are all that is available via
+the Census API.
 """
 import sys
 from csv import DictWriter
 from census import Census
+
+from variable_list import VariableList
 
 API_KEY = '35c615c69742eabcfe631cf4c29ff3fed90939cc'
 PA_FIPS_CODE = '42'
@@ -12,27 +15,17 @@ PHILADELPHIA_COUNTY_FIPS_CODE = '101'
 
 YEARS = range(2013, 2017)               # Fetch from 2013-2016 inclusive.
 
-class BlockGroup:
-    COLNAME_TO_VAR_MAP = {
-        'renter_occupied_household_size': 'B25010_003E'
-    }
+variable_list = VariableList()
 
+class BlockGroup:
     def __init__(self, bg_data, year):
         self.bg_data = bg_data
         self.year = year
 
 
-    def varnames_for_request():
-        return tuple(BlockGroup.COLNAME_TO_VAR_MAP.values())
-
-
-    def colnames():
-        return ['GEOID', 'year'] + list(BlockGroup.COLNAME_TO_VAR_MAP.keys())
-
-
     def map_variable_names(self):
         """Maps ACS var names to nicer names we want to use for our columns."""
-        for colname, var in self.COLNAME_TO_VAR_MAP.items():
+        for colname, var in variable_list.mapping.items():
             self.bg_data[colname] = self.bg_data.pop(var)
 
         return self
@@ -66,10 +59,14 @@ class BlockGroup:
                    .bg_data
 
 
+def colnames():
+    return ['GEOID', 'year'] + variable_list.variables()
+
+
 def fetch_blockgroups(year):
     client = Census(API_KEY)
     resp = client.acs5.state_county_blockgroup(
-        BlockGroup.varnames_for_request(),
+        variable_list.acs_variables(),
         PA_FIPS_CODE,
         PHILADELPHIA_COUNTY_FIPS_CODE,
         Census.ALL,
@@ -82,7 +79,7 @@ def fetch_blockgroups(year):
 if __name__ == "__main__":
     writer = DictWriter(
         sys.stdout,                        # Output to stdout
-        fieldnames=BlockGroup.colnames(),  # Look for these keys
+        fieldnames=colnames(),             # Look for these keys
         extrasaction='ignore'              # Ignore extra keys in row dicts
     )
 
