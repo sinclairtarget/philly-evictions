@@ -51,7 +51,7 @@ class VariableList:
         """
         Return offset for variable based on name.
 
-        B25010_003E has an offset of 3.
+        B25010_003E has an offset of 3, which become 2 if we zero-index.
         """
         exp = r"_([0-9]*)[a-zA-Z]*$"
         match = re.search(exp, variable_name)
