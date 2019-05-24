@@ -80,3 +80,16 @@ This will generate a `.ipynb` notebook that you can edit normally using Jupyter
 notebook's web interface. When you save changes they automatically get saved to
 both the `.ipynb` file and the Markdown file. Git will only pick up the changes
 to the Markdown file.
+
+## Downloading ACS Data
+You can download ACS data using two separate doit tasks.
+
+If you run `doit acs_pull_api`, you will download ACS data for 2013 to 2016
+from the Census API.
+
+If you run `doit acs_pull_files`, you will download ACS summary files and
+extract variables from them for 2009 to 2012. Downloading the ACS summary files
+can take a while.
+
+You can edit [this variable list](./acs/variables.csv) to control what ACS
+variables get downloaded.
