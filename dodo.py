@@ -33,9 +33,9 @@ def task_sync_proposal():
     }
 
 
-def task_acs_fetch():
+def task_acs_pull_api():
     """Fetches ACS data for 2013 to 2016 using the fetch from API script."""
-    target = 'data/acs.csv'
+    target = 'data/acs_2013_2016.csv'
     dep = 'acs/fetch_from_api.py'
     return {
         'file_dep': [dep],
@@ -46,7 +46,22 @@ def task_acs_fetch():
     }
 
 
-def task_acs_download():
+def task_acs_pull_files():
+    """Extracts variables for 2009 to 2012 from ACS summary file data."""
+    target = 'data/acs_2009_2012.csv'
+    script_dep = 'acs/extract_variables.py'
+    data_dep = 'data/acs-summary-files'
+    return {
+        'file_dep': [script_dep],
+        'task_dep': ['download_summary_files'],
+        'targets': [target],
+        'actions': [
+            f"python {script_dep} {data_dep} > {target}"
+        ]
+    }
+
+
+def task_download_summary_files():
     """Downloads ACS summary files for 2009 to 2012 from Census website."""
     target = os.path.abspath('./data/acs-summary-files')
     dep = 'acs/download_summary_files.py'

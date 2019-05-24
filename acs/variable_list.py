@@ -3,13 +3,15 @@ Wraps the list of ACS variables we want to download/use.
 """
 import csv
 import os
+import re
 
 DIRNAME = os.path.dirname(__file__)
 FILENAME = os.path.join(DIRNAME, 'variables.csv')
 
 class VariableList:
     def __init__(self, filename=FILENAME):
-        self.mapping = dict()      # Maps our var name to ACS var name
+        self.mapping = dict()               # Maps our var name to ACS var name
+        self.reverse_mapping = dict()
 
         with open(filename) as f:
             reader = csv.reader(f)
@@ -17,6 +19,7 @@ class VariableList:
 
             for row in reader:
                 self.mapping[row[1]] = row[0]
+                self.reverse_mapping[row[0]] = row[1]
 
 
     def acs_variables(self):
@@ -24,6 +27,35 @@ class VariableList:
         return list(self.mapping.values())
 
 
+    def acs_tables(self):
+        """Only the table part of ACS variable names."""
+        variables = self.acs_variables()
+        return [VariableList.table(var) for var in variables]
+
+
     def variables(self):
         """Nice variable names that we came up with."""
         return list(self.mapping.keys())
+
+
+    def our_var_for_acs_var(self, acs_varname):
+        return self.reverse_mapping.get(acs_varname)
+
+
+    def table(variable_name):
+        """Get base ACS table name from variable name."""
+        return variable_name.split('_')[0]
+
+
+    def var_offset(variable_name):
+        """
+        Return offset for variable based on name.
+
+        B25010_003E has an offset of 3.
+        """
+        exp = r"_([0-9]*)[a-zA-Z]*$"
+        match = re.search(exp, variable_name)
+        if not match:
+            raise Error('Could not find offset from variable name!')
+
+        return int(match.group(1)) - 1
