@@ -124,11 +124,15 @@ if __name__ == '__main__':
         sys.stderr.write(f"Path {summary_file_dir} does not exist!\n")
         exit(1)
 
+    renamed_vars = variable_list.variables()
+
+    # We will keep concatenating to this table to get our final results
     df_final = pd.DataFrame(
-        columns=['GEOID', 'year'] + variable_list.variables()
+        columns=['GEOID', 'year'] + renamed_vars
     )
 
     for year in YEARS:
+        # df_seq maps ACS table names to column positions
         df_seq = pd.read_csv(summary_file_dir.sequence_file_path(year))
         df_seq = clean_sequence_lookup(df_seq, year)
 
@@ -141,11 +145,17 @@ if __name__ == '__main__':
         df_out = df_geo[['GEOID']].copy()
         df_out['year'] = year
 
-        for row in df_seq.to_dict('records'):
-            var_name = row['fullname']
+        for renamed_var in renamed_vars:
+            acs_varname = variable_list.acs_var_for_our_var(renamed_var)
+            candidates = df_seq[df_seq.fullname == acs_varname].to_dict('records')
+            if len(candidates) == 0:            # Could not find this var
+                df_out[renamed_var] = np.nan
+                continue
+
+            row = candidates[0]
             seq_num = row['sequence_number']
             start_pos = row['start_position']
-            offset = VariableList.var_offset(var_name)
+            offset = VariableList.var_offset(acs_varname)
             target_col = start_pos - 1 + offset
 
             path = summary_file_dir.estimate_file(year, seq_num)
@@ -157,12 +167,12 @@ if __name__ == '__main__':
 
             df = df[['GEOID', target_col]]
             df = df.rename(columns={
-                target_col: variable_list.our_var_for_acs_var(var_name)
+                target_col: renamed_var
             })
 
             df_out = pd.merge(df_out, df, how='left', on='GEOID')
-            df_out.GEOID = df_out.GEOID.map(lambda x: trim_geoid(x))
 
+        df_out.GEOID = df_out.GEOID.map(lambda x: trim_geoid(x))
         df_final = pd.concat([df_final, df_out])
 
     df_final.to_csv(sys.stdout, index=False)

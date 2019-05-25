@@ -35,7 +35,11 @@ class VariableList:
 
     def variables(self):
         """Nice variable names that we came up with."""
-        return list(self.mapping.keys())
+        return sorted(list(self.mapping.keys()))
+
+
+    def acs_var_for_our_var(self, our_varname):
+        return self.mapping.get(our_varname)
 
 
     def our_var_for_acs_var(self, acs_varname):
