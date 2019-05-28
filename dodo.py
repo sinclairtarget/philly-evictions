@@ -36,12 +36,13 @@ def task_sync_proposal():
 def task_acs_pull_api():
     """Fetches ACS data for 2013 to 2016 using the fetch from API script."""
     target = 'data/acs_2013_2016.csv'
-    dep = 'acs/fetch_from_api.py'
+    script_dep = 'acs/fetch_from_api.py'
+    variables_dep = 'acs/variables.csv'
     return {
-        'file_dep': [dep],
+        'file_dep': [script_dep, variables_dep],
         'targets': [target],
         'actions': [
-            f"python {dep} > {target}"
+            f"python {script_dep} > {target}"
         ]
     }
 
@@ -51,8 +52,9 @@ def task_acs_pull_files():
     target = 'data/acs_2009_2012.csv'
     script_dep = 'acs/extract_variables.py'
     data_dep = 'data/acs-summary-files'
+    variables_dep = 'acs/variables.csv'
     return {
-        'file_dep': [script_dep],
+        'file_dep': [script_dep, variables_dep],
         'task_dep': ['download_summary_files'],
         'targets': [target],
         'actions': [
@@ -68,6 +70,7 @@ def task_download_summary_files():
     return {
         'file_dep': [dep],
         'targets': [target],
+        'uptodate': [os.path.exists(target)],
         'actions': [
             f"mkdir -p {target}",
             f"python {dep} {target}"
