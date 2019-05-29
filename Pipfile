@@ -19,6 +19,7 @@ doit = "*"
 jupyter = "*"
 census = "*"
 ipdb = "*"
+aequitas = "*"
 
 [requires]
 python_version = "3.7"
