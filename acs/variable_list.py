@@ -4,14 +4,16 @@ Wraps the list of ACS variables we want to download/use.
 import csv
 import os
 import re
+import collections
 
 DIRNAME = os.path.dirname(__file__)
 FILENAME = os.path.join(DIRNAME, 'variables.csv')
 
 class VariableList:
     def __init__(self, filename=FILENAME):
-        self.mapping = dict()               # Maps our var name to ACS var name
-        self.reverse_mapping = dict()
+        # Maps our var name to ACS var name
+        self.mapping = collections.OrderedDict()
+        self.reverse_mapping = collections.OrderedDict()
 
         with open(filename) as f:
             reader = csv.reader(f)
@@ -35,7 +37,7 @@ class VariableList:
 
     def variables(self):
         """Nice variable names that we came up with."""
-        return sorted(list(self.mapping.keys()))
+        return list(self.mapping.keys())
 
 
     def acs_var_for_our_var(self, our_varname):
