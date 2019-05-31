@@ -49,6 +49,30 @@ class ClassifierEvaluator(Evaluator):
                                      self._threshold_labels())
 
 
+    def metric_names(self):
+        """
+        Returns the names of all the metrics in the order that the metrics
+        are returned from all_metrics().
+        """
+        return [
+            'accuracy',
+            'precision',
+            'recall',
+            'f1',
+            'auc'
+        ]
+
+
+    def all_metrics(self):
+        return [
+            self.accuracy(),
+            self.precision(),
+            self.recall(),
+            self.f1(),
+            self.auc()
+        ]
+
+
     def _threshold_labels(self):
         # Stolen from Rayid Ghani
         # DataFrame must be sorted by predicted score!!!!
@@ -75,3 +99,25 @@ class RegressionEvaluator(Evaluator):
     def r2(self):
         return metrics.r2_score(self.df.actual.values,
                                 self.df.predict.values)
+
+
+    def metric_names(self):
+        """
+        Returns the names of all the metrics in the order that the metrics
+        are returned from all_metrics().
+        """
+        return [
+            'mean_squared_error',
+            'root_mean_squared_error',
+            'explained_variance',
+            'r2'
+        ]
+
+
+    def all_metrics(self):
+        return [
+            self.mean_squared_error(),
+            self.root_mean_squared_error(),
+            self.explained_variance(),
+            self.r2()
+        ]
