@@ -1,6 +1,8 @@
 .venv
 *.ipynb*
-proposal/*.ipynb*
 *.html
-proposal/*.html
 .doit*
+
+proposal/*.ipynb*
+proposal/*.html
+data/acs-summary-files/
