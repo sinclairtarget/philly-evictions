@@ -1,18 +1,23 @@
 import pandas as pd
 import sklearn.metrics as metrics
+import math
 
 class Evaluator:
     """
     A class that wraps a model's prediction results and can be used to generate
     various metrics based on a threshold.
     """
-    def __init__(self, y_predict, y_actual, threshold_percentage):
+    def __init__(self, y_predict, y_actual):
         self.df = pd.DataFrame({ 'predict': y_predict, 'actual': y_actual })
+
+
+class ClassifierEvaluator(Evaluator):
+    def __init__(self, y_predict, y_actual, threshold_percentage):
+        Evaluator.__init__(self, y_predict, y_actual, threshold_percentage)
         self.df = self.df.sort_values('predict', ascending=False)
         self.threshold_percentage = threshold_percentage
 
 
-class ClassifierEvaluator(Evaluator):
     def prevalence(self):
         """Returns the ratio of actually true outcomes to total outcomes."""
         count_true = len(self.df[self.df.actual == 1])
@@ -49,3 +54,24 @@ class ClassifierEvaluator(Evaluator):
         # DataFrame must be sorted by predicted score!!!!
         cutoff_index = int(len(self.df) * (self.threshold_percentage / 100.0))
         return [1 if i < cutoff_index else 0 for i in range(len(self.df))]
+
+
+class RegressionEvaluator(Evaluator):
+    def mean_squared_error(self):
+        return metrics.mean_squared_error(self.df.actual.values,
+                                          self.df.predict.values)
+
+
+    def root_mean_squared_error(self):
+        return math.sqrt(metrics.mean_squared_error(self.df.actual.values,
+                                                    self.df.predict.values))
+
+
+    def explained_variance(self):
+        return metrics.explained_variance_score(self.df.actual.values,
+                                                self.df.predict.values)
+
+
+    def r2(self):
+        return metrics.r2_score(self.df.actual.values,
+                                self.df.predict.values)
