@@ -49,7 +49,7 @@ class ClassifierEvaluator(Evaluator):
                                      self._threshold_labels())
 
 
-    def metric_names(self):
+    def metric_names():
         """
         Returns the names of all the metrics in the order that the metrics
         are returned from all_metrics().
@@ -101,7 +101,7 @@ class RegressionEvaluator(Evaluator):
                                 self.df.predict.values)
 
 
-    def metric_names(self):
+    def metric_names():
         """
         Returns the names of all the metrics in the order that the metrics
         are returned from all_metrics().
