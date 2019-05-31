@@ -125,12 +125,9 @@ if __name__ == '__main__':
         exit(1)
 
     renamed_vars = variable_list.variables()
+    final_colnames = ['GEOID', 'year'] + variable_list.variables()
 
-    # We will keep concatenating to this table to get our final results
-    df_final = pd.DataFrame(
-        columns=['GEOID', 'year'] + renamed_vars
-    )
-
+    df_outs = []
     for year in YEARS:
         # df_seq maps ACS table names to column positions
         df_seq = pd.read_csv(summary_file_dir.sequence_file_path(year))
@@ -173,6 +170,8 @@ if __name__ == '__main__':
             df_out = pd.merge(df_out, df, how='left', on='GEOID')
 
         df_out.GEOID = df_out.GEOID.map(lambda x: trim_geoid(x))
-        df_final = pd.concat([df_final, df_out])
+        df_outs.append(df_out)
 
+    df_final = pd.concat(df_outs, ignore_index=True)
+    df_final = df_final.reindex(final_colnames, axis=1)
     df_final.to_csv(sys.stdout, index=False)
