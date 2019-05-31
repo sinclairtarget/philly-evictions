@@ -50,6 +50,9 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
         train_df, test_df = scale_data(train_df, test_df, scalers)
         train_df, test_df = binarize_data(train_df, test_df, binaries)
 
+    train_df = drop_unwanted_columns(train_df, ['GEOID', 'year_evictions', 'year_features','median_household_income', 'median_gross_rent','eviction-filings'])
+    test_df = drop_unwanted_columns(test_df, ['GEOID', 'year_evictions', 'year_features', 'median_household_income', 'median_gross_rent','eviction-filings'])
+
     return train_df, test_df
 
 
@@ -148,6 +151,12 @@ def binarize_data(train_df, test_df, median_dict):
 
     return train_df, test_df
 
+def drop_unwanted_columns(df, cols_to_drop):
+    '''
+    Drops columns that will not be used in feature generation
+    '''
+    df = df.drop(cols_to_drop, axis=1)
+    return df
 
 
 
