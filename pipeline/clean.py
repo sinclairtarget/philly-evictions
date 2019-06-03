@@ -167,6 +167,8 @@ def get_change_in_feature(df, col, historical_cols):
     for historical_col in historical_cols:
         time_horizon = historical_col[-1]
         df[col+'_change'+'_'+time_horizon] = (df[col] - df[historical_col])/df[historical_col]
+        df[col+'_change'+'_'+time_horizon] = np.where((df[col] == 0.0) & (df[historical_col] == 0.0), 
+            0.0, df[col+'_change'+'_'+time_horizon])
     
     return df
 
