@@ -28,6 +28,22 @@ def clean_overall_data(complete_df):
     df = impute_as_zero(df, ['violations_count','crime_count'])
     df = get_change_in_feature(df, 'evictions', ['evictions_t-1',
         'evictions_t-2','evictions_t-5'])
+    df = get_pct_feature(df, 'crime_count', 'total_population')
+    df = get_pct_feature(df, 'violations_count', 'total_population')
+    df = get_pct_feature(df, 'total_renter_households', 'total_households')
+    df = get_pct_feature(df, 'vacant_units', 'units')
+    df = get_pct_feature(df, 'for_rent_units', 'units')
+    df = get_pct_feature(df, 'num_af_am_alone', 'total_population')
+    df = get_pct_feature(df, 'num_hisp', 'total_population')
+    df = get_pct_feature(df, 'black_alone_owner_occupied', 'units')
+    df = get_pct_feature(df, 'num_with_high_school_degree', 'total_population')
+    df = get_pct_feature(df, 'num_with_ged', 'total_population')
+    df = get_pct_feature(df, 'num_unemployed', 'total_population')
+    df['majority_af_am'] = np.where(df['num_af_am_alone_percent'] > .5, 1, 0)
+    df['majority_hisp'] = np.where(df['num_hisp_percent'] > .5, 1, 0)
+    df['evictions_change_1_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
+    df['evictions_change_2_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
+    df['evictions_change_5_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
 
     return df
 
@@ -36,8 +52,18 @@ def clean_overall_data(complete_df):
 def get_feature_generators(train_df):
     feature_generator_dict = {}
 
-    feature_generator_dict['scalers'] = create_scaler(train_df,['median_household_income'])
-    feature_generator_dict['binaries'] = get_medians(train_df,['median_gross_rent'])
+    feature_generator_dict['scalers'] = create_scaler(train_df,['evictions_t-1', 'evictions_t-2', 'evictions_t-5',
+        'crime_count', 'violations_count', 'total_population',
+        'total_households', 'total_renter_households',
+        'renter_occupied_household_size', 'median_gross_rent',
+        'median_household_income', 'units', 'occupied_units', 'vacant_units',
+        'for_rent_units', 'num_af_am_alone', 'num_hisp',
+        'black_alone_owner_occupied', 'num_with_high_school_degree',
+        'num_with_ged', 'num_unemployed'])
+    feature_generator_dict['binaries'] = get_binary_cutoffs(train_df,
+        {'crime_count_percent': .9, 'violations_count_percent': .9,
+        'vacant_units_percent': .5, 'total_renter_households_percent': .5,
+        'num_unemployed_percent': .5})
 
     return feature_generator_dict
 
@@ -47,15 +73,9 @@ def get_feature_generators(train_df):
 def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
 
     #Impute missing values
-    test_df = simple_imputation(test_df, ['black_alone_owner_occupied','for_rent_units',
-        'median_gross_rent', 'median_household_income', 'num_af_am_alone', 'num_hisp',
-        'num_unemployed', 'num_with_ged', 'num_with_high_school_degree',
-        'occupied_units', 'renter_occupied_household_size', 'units','vacant_units'])
 
-    train_df = simple_imputation(test_df, ['black_alone_owner_occupied','for_rent_units',
-        'median_gross_rent', 'median_household_income', 'num_af_am_alone', 'num_hisp',
-        'num_unemployed', 'num_with_ged', 'num_with_high_school_degree',
-         'occupied_units', 'renter_occupied_household_size', 'units','vacant_units'])
+    train_df = train_df.fillna(train_df.median())
+    test_df = test_df.fillna(test_df.median())
 
     if feature_generator_dict:
         scalers = feature_generator_dict['scalers']
@@ -63,9 +83,6 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
 
         train_df, test_df = scale_data(train_df, test_df, scalers)
         train_df, test_df = binarize_data(train_df, test_df, binaries)
-
-    train_df = drop_unwanted_columns(train_df, ['GEOID', 'year_evictions', 'year_features','median_household_income', 'median_gross_rent','eviction-filings'])
-    test_df = drop_unwanted_columns(test_df, ['GEOID', 'year_evictions', 'year_features', 'median_household_income', 'median_gross_rent','eviction-filings'])
 
     return train_df, test_df
 
@@ -103,20 +120,6 @@ def impute_as_zero(df, cols):
 
     return df
 
-def simple_imputation(df, cols, method='median'):
-    '''
-    Takes in a dataframe, columns to impute from, and a method (which can be mean or median)
-    '''
-    for col in cols:
-        if method == 'median':
-            df[col].fillna(df[col].median(), inplace=True)
-
-        elif method == 'mean':
-            df[col].fillna(df[col].mean(), inplace=True)
-
-    return df
-
-
 def scale_data(train_df, test_df, scaler_dict):
     '''
     Scale data on training and apply to testing set leveraging scikitlearn function
@@ -143,25 +146,25 @@ def create_scaler(train_df, cols):
 
     return scaler_dict
 
-def get_medians(train_df, cols):
+def get_binary_cutoffs(train_df, col_quantile_dict):
     '''
     Create dict of cols and median vals in training data to apply on train + test in
     creating binary columns
     '''
-    median_dict = {}
+    return_dict = {}
 
-    for col in cols:
-        median_dict[col] = train_df[col].median()
+    for col, q in col_quantile_dict.items():
+        return_dict[col] = train_df[col].quantile(q=q)
 
-    return median_dict
+    return return_dict
 
-def binarize_data(train_df, test_df, median_dict):
+def binarize_data(train_df, test_df, quantile_dict):
     '''
     Takes median dictionaries
     '''
-    for col, median in median_dict.items():
-        train_df[col+'_binary'] = np.where(train_df[col] >= median, 1, 0)
-        test_df[col+'_binary'] = np.where(test_df[col] >= median, 1, 0)
+    for col, quantile in quantile_dict.items():
+        train_df[col+'_binary'] = np.where(train_df[col] >= quantile, 1, 0)
+        test_df[col+'_binary'] = np.where(test_df[col] >= quantile, 1, 0)
 
     return train_df, test_df
 
@@ -179,10 +182,22 @@ def get_change_in_feature(df, col, historical_cols):
     for historical_col in historical_cols:
         time_horizon = historical_col[-1]
         df[col+'_change'+'_'+time_horizon] = (df[col] - df[historical_col])/df[historical_col]
+        
         df[col+'_change'+'_'+time_horizon] = np.where((df[col] == 0.0) & (df[historical_col] == 0.0), 
             0.0, df[col+'_change'+'_'+time_horizon])
+
+        df[col+'_change'+'_'+time_horizon] = np.where(df[historical_col] == 0.0, 
+            1.0 * df[historical_col], df[col+'_change'+'_'+time_horizon])
     
     return df
+
+def get_pct_feature(df, numerator_col, denom_col):
+    '''
+    Create a percentage column
+    '''
+    df[numerator_col+'_percent'] = df[numerator_col]/df[denom_col]
+    return df
+
 
 
 
