@@ -1,4 +1,4 @@
-import numpy as pd
+import numpy as np
 import pandas as pd
 
 def check_any_nan_or_inf(df, name='df'):

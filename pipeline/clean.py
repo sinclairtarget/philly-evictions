@@ -207,8 +207,14 @@ def get_pct_feature(df, numerator_col, denom_col):
     Create a percentage column
     '''
     df[numerator_col+'_percent'] = df[numerator_col]/df[denom_col]
-    return df
 
+    df[numerator_col+'_percent'] = np.where((df[numerator_col] == 0.0) & (df[denom_col] == 0.0), 
+        0.0, df[numerator_col+'_percent'])
+
+    df[numerator_col+'_percent'] = np.where(df[denom_col] == 0.0, 
+        np.nan, df[numerator_col+'_percent'])
+
+    return df
 def check_col_match(train_df, test_df):
     '''
     Remove cols from test that do not appear in training
