@@ -20,15 +20,26 @@ features_merged['lag'] = features_merged['year'] + 1
 # Import evictions data
 evictions_df = pd.read_csv('data/block-groups_pa.csv')
 evictions_df = evictions_df[evictions_df['parent-location'] == 'Philadelphia County, Pennsylvania']
-evictions_df = evictions_df[evictions_df['year'] >= 2010]
-evictions_df = evictions_df[['GEOID', 'year', 'name', 'parent-location', 
-'eviction-filings', 'evictions', 'low-flag', 'imputed', 'subbed']]
+evictions_df = evictions_df[['GEOID', 'year', 'name', 'parent-location', 'eviction-filings', 
+                             'evictions', 'low-flag', 'imputed', 'subbed']]
+
+# Create evictions_t-1, t-2, t-5 features
+evictions_wide = evictions_df.pivot(index='GEOID', columns='year', values='evictions')
+evictions_lag = pd.merge(evictions_df, evictions_wide, left_on='GEOID', right_index=True)
+evictions_lag.head()
+for year in range(2010, 2017): 
+    evictions_t_1 = year - 1 
+    evictions_t_2 = year - 2
+    evictions_t_5 = year - 5
+    evictions_lag.loc[evictions_lag['year'] == year, 'evictions_t-1'] = evictions_lag[evictions_t_1]
+    evictions_lag.loc[evictions_lag['year'] == year, 'evictions_t-2'] = evictions_lag[evictions_t_2]
+    evictions_lag.loc[evictions_lag['year'] == year, 'evictions_t-5'] = evictions_lag[evictions_t_5]
+evictions_lag = evictions_lag[['GEOID', 'year', 'evictions_t-1', 'evictions_t-2', 'evictions_t-5']]    
+evictions_merged = pd.merge(evictions_df, evictions_lag, on=['GEOID', 'year']) 
 
 # Merge evictions data with features data 
-final_merged_df = pd.merge(evictions_df, features_merged, 
+final_merged_df = pd.merge(evictions_merged, features_merged, 
                            left_on=['GEOID', 'year'], right_on=['GEOID', 'lag'], how='left')
 final_merged_df.drop(columns=['name', 'parent-location', 'lag'], inplace=True)
 final_merged_df.rename(columns={'year_x': 'year_evictions', 'year_y': 'year_features'}, inplace=True)
-
-# Export to csv 
-final_merged_df.to_csv('data/final_merged_df.csv', index=False)
+final_merged_df = final_merged_df[final_merged_df['year_evictions'] >= 2010]
