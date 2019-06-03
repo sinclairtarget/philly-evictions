@@ -33,6 +33,21 @@ def task_sync_proposal():
     }
 
 
+def task_sync_analysis():
+    """Generate .ipynb notebook from analysis markdown source."""
+    target = 'analysis.ipynb'
+    dep = 'analysis.md'
+    return {
+        'file_dep': [dep],
+        'targets': [target],
+        'actions': [
+            f"jupytext --to notebook {dep}",
+            f"jupytext --set-format ipynb,md --sync {target}"
+        ],
+        'clean': True
+    }
+
+
 def task_acs_pull_api():
     """Fetches ACS data for 2013 to 2016 using the fetch from API script."""
     target = 'data/acs_2013_2016.csv'
