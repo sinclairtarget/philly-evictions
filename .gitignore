@@ -6,3 +6,5 @@
 proposal/*.ipynb*
 proposal/*.html
 data/acs-summary-files/
+
+!analysis.ipynb

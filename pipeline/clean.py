@@ -2,6 +2,18 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 
+# Master function to clean a split
+def clean_split(split):
+    train_df, test_df = split
+    train_df = clean_overall_data(train_df)
+    test_df = clean_overall_data(test_df)
+
+    features_generator = get_feature_generators(train_df)
+    train_df, test_df = \
+        clean_and_create_features(train_df, test_df, features_generator)
+
+    return train_df, test_df
+
 
 ####### FUNCTIONS TO RUN PRE-TRAIN_TEST SPLIT ######
 
@@ -14,6 +26,8 @@ def clean_overall_data(complete_df):
         'median_household_income'])
     df = clean_missing_vals(df)
     df = impute_as_zero(df, ['violations_count','crime_count'])
+    df = get_change_in_feature(df, 'evictions', ['evictions_t-1',
+        'evictions_t-2','evictions_t-5'])
 
     return df
 
@@ -109,7 +123,7 @@ def scale_data(train_df, test_df, scaler_dict):
     Inputs: training df, testing df, colum
     '''
     for col, scaler in scaler_dict.items():
-        
+
         train_df[col+'_scaled'] = scaler.transform(train_df[[col]])
         test_df[col+'_scaled'] = scaler.transform(test_df[[col]])
 
@@ -156,6 +170,18 @@ def drop_unwanted_columns(df, cols_to_drop):
     Drops columns that will not be used in feature generation
     '''
     df = df.drop(cols_to_drop, axis=1)
+    return df
+
+def get_change_in_feature(df, col, historical_cols):
+    '''
+    Creates a new feature of % change from t - time horizon year
+    '''
+    for historical_col in historical_cols:
+        time_horizon = historical_col[-1]
+        df[col+'_change'+'_'+time_horizon] = (df[col] - df[historical_col])/df[historical_col]
+        df[col+'_change'+'_'+time_horizon] = np.where((df[col] == 0.0) & (df[historical_col] == 0.0), 
+            0.0, df[col+'_change'+'_'+time_horizon])
+    
     return df
 
 
