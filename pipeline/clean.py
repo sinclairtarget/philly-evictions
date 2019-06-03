@@ -158,5 +158,12 @@ def drop_unwanted_columns(df, cols_to_drop):
     df = df.drop(cols_to_drop, axis=1)
     return df
 
+def get_change_in_feature(df, col, historical_col, time_horizon):
+    '''
+    Creates a new feature of % change from t - time horizon year
+    '''
+    df[col+'_change'+'_time_horizon'] = (df[col] - df[historical_col])/time_horizon
+    return df
+
 
 
