@@ -19,6 +19,30 @@ def split_by_year(df, colname='year', drop_col=False):
             for year_tuple in year_tuples]
 
 
+def split_boundaries(splits, colname='year'):
+    """
+    Returns a dataframe that clearly shows the start and end boundaries of all
+    the training and test sets in the given list of splits.
+    """
+    df = pd.DataFrame(columns=[
+        'train_start', 'train_end', 'test_start', 'test_end'
+    ])
+
+    for train_df, test_df in splits:
+        train_min = train_df[colname].min()
+        train_max = train_df[colname].max()
+        test_min = test_df[colname].min()
+        test_max = test_df[colname].max()
+        df = df.append({
+            'train_start': train_min,
+            'train_end': train_max,
+            'test_start': test_min,
+            'test_end': test_max
+        }, ignore_index=True)
+
+    return df
+
+
 def _df_tuple(df, colname, drop_col, year_tuple):
     train_range, test_year = year_tuple
     train_df = df[df[colname].isin(train_range)]

@@ -2,6 +2,18 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 
+# Master function to clean a split
+def clean_split(split):
+    train_df, test_df = split
+    train_df = clean_overall_data(train_df)
+    test_df = clean_overall_data(test_df)
+
+    features_generator = get_feature_generators(train_df)
+    train_df, test_df = \
+        clean_and_create_features(train_df, test_df, features_generator)
+
+    return train_df, test_df
+
 
 ####### FUNCTIONS TO RUN PRE-TRAIN_TEST SPLIT ######
 
@@ -111,7 +123,7 @@ def scale_data(train_df, test_df, scaler_dict):
     Inputs: training df, testing df, colum
     '''
     for col, scaler in scaler_dict.items():
-        
+
         train_df[col+'_scaled'] = scaler.transform(train_df[[col]])
         test_df[col+'_scaled'] = scaler.transform(test_df[[col]])
 
