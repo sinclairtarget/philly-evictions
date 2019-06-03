@@ -8,12 +8,12 @@ class Evaluator:
     various metrics based on a threshold.
     """
     def __init__(self, y_predict, y_actual):
-        self.df = pd.DataFrame({ 'predict': y_predict, 'actual': y_actual })
+        self.df = pd.DataFrame(data={ 'predict': y_predict, 'actual': y_actual })
 
 
 class ClassifierEvaluator(Evaluator):
     def __init__(self, y_predict, y_actual, threshold_percentage):
-        Evaluator.__init__(self, y_predict, y_actual, threshold_percentage)
+        Evaluator.__init__(self, y_predict, y_actual)
         self.df = self.df.sort_values('predict', ascending=False)
         self.threshold_percentage = threshold_percentage
 
