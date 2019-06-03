@@ -75,7 +75,11 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
     #Impute missing values
 
     train_df = train_df.fillna(train_df.median())
+    train_df = train_df.dropna(axis=1, how='all')
     test_df = test_df.fillna(test_df.median())
+    test_df = test_df.dropna(axis=1, how='all')
+
+    test_df = check_col_match(train_df, test_df)
 
     if feature_generator_dict:
         scalers = feature_generator_dict['scalers']
@@ -127,6 +131,9 @@ def scale_data(train_df, test_df, scaler_dict):
     '''
     for col, scaler in scaler_dict.items():
 
+        if col not in train_df.columns:
+            continue
+
         train_df[col+'_scaled'] = scaler.transform(train_df[[col]])
         test_df[col+'_scaled'] = scaler.transform(test_df[[col]])
 
@@ -163,6 +170,10 @@ def binarize_data(train_df, test_df, quantile_dict):
     Takes median dictionaries
     '''
     for col, quantile in quantile_dict.items():
+
+        if col not in train_df.columns:
+            continue
+            
         train_df[col+'_binary'] = np.where(train_df[col] >= quantile, 1, 0)
         test_df[col+'_binary'] = np.where(test_df[col] >= quantile, 1, 0)
 
@@ -197,6 +208,20 @@ def get_pct_feature(df, numerator_col, denom_col):
     '''
     df[numerator_col+'_percent'] = df[numerator_col]/df[denom_col]
     return df
+
+def check_col_match(train_df, test_df):
+    '''
+    Remove cols from test that do not appear in training
+    '''
+    extra_cols = []
+
+    for column in test_df.columns:
+        if column not in train_df.columns:
+            extra_cols.append(column)
+
+    test_df = test_df.drop(extra_cols,axis=1)
+
+    return test_df
 
 
 
