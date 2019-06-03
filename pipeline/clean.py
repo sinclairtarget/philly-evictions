@@ -14,6 +14,8 @@ def clean_overall_data(complete_df):
         'median_household_income'])
     df = clean_missing_vals(df)
     df = impute_as_zero(df, ['violations_count','crime_count'])
+    df = get_change_in_feature(df, 'evictions', ['evictions_t-1',
+        'evictions_t-2','evictions_t-5'])
 
     return df
 
@@ -158,11 +160,14 @@ def drop_unwanted_columns(df, cols_to_drop):
     df = df.drop(cols_to_drop, axis=1)
     return df
 
-def get_change_in_feature(df, col, historical_col, time_horizon):
+def get_change_in_feature(df, col, historical_cols):
     '''
     Creates a new feature of % change from t - time horizon year
     '''
-    df[col+'_change'+'_time_horizon'] = (df[col] - df[historical_col])/time_horizon
+    for historical_col in historical_cols:
+        time_horizon = historical_col[-1]
+        df[col+'_change'+'_'+time_horizon] = (df[col] - df[historical_col])/df[historical_col]
+    
     return df
 
 
