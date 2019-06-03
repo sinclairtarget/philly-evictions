@@ -20,7 +20,7 @@ features_merged['lag'] = features_merged['year'] + 1
 # Import evictions data
 evictions_df = pd.read_csv('data/block-groups_pa.csv')
 evictions_df = evictions_df[evictions_df['parent-location'] == 'Philadelphia County, Pennsylvania']
-evictions_df = evictions_df[['GEOID', 'year', 'name', 'parent-location', 'eviction-filings', 
+evictions_df = evictions_df[['GEOID', 'year', 'name', 'parent-location', 
                              'evictions', 'low-flag', 'imputed', 'subbed']]
 
 # Create evictions_t-1, t-2, t-5 features
@@ -40,6 +40,9 @@ evictions_merged = pd.merge(evictions_df, evictions_lag, on=['GEOID', 'year'])
 # Merge evictions data with features data 
 final_merged_df = pd.merge(evictions_merged, features_merged, 
                            left_on=['GEOID', 'year'], right_on=['GEOID', 'lag'], how='left')
-final_merged_df.drop(columns=['name', 'parent-location', 'lag'], inplace=True)
-final_merged_df.rename(columns={'year_x': 'year_evictions', 'year_y': 'year_features'}, inplace=True)
+final_merged_df.drop(columns=['name', 'parent-location', 'lag', 'year_y'], inplace=True)
+final_merged_df.rename(columns={'year_x': 'year_evictions'}, inplace=True)
 final_merged_df = final_merged_df[final_merged_df['year_evictions'] >= 2010]
+
+# Export to csv 
+final_merged_df.to_csv('data/final_merged_df.csv', index=False)
