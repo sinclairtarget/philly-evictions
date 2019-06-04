@@ -34,6 +34,9 @@ clfs = {'LR':  LogisticRegression(solver='liblinear', random_state=seed),
         'ET':  ExtraTreesClassifier(random_state=seed),
         'BC':  BaggingClassifier(random_state=seed, bootstrap=True)}
 
+clf_tiny_grid =  {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
+                  'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]}}
+
 clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'KNN': {'n_neighbors': [5,10],'weights': ['uniform','distance'],'algorithm': ['auto','ball_tree','kd_tree']},
                   'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]},
