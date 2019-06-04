@@ -78,7 +78,7 @@ reg_large_grid = {'LR': {},
                   'RFR': {'n_estimators': [1,10,100,1000,10000], 'max_depth': [1,5,10,20,50,100], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]}}
 
 
-def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds):
+def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds, debug=False):
     '''
     thresholds between 0 and 100
     '''
@@ -94,6 +94,9 @@ def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds):
         parameter_values = grid[c]
 
         for p in ParameterGrid(parameter_values):
+            if debug:
+                print(f"Running {c} with parameters {p}")
+
             model.set_params(**p)
             model.fit(X_train, y_train)
             scores = model.predict_proba(X_test)[:,1]
