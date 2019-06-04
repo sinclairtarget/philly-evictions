@@ -34,7 +34,10 @@ clfs = {'LR':  LogisticRegression(solver='liblinear', random_state=seed),
         'ET':  ExtraTreesClassifier(random_state=seed),
         'BC':  BaggingClassifier(random_state=seed, bootstrap=True)}
 
+clfs_tiny = {model: clfs[model] for model in ['LR', 'DT', 'RF']}
+
 clf_tiny_grid =  {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
+                  'RF':  {'n_estimators': [100,1000], 'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [5,10]},
                   'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]}}
 
 clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
