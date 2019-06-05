@@ -2,6 +2,9 @@ import numpy as np
 from aequitas.preprocessing import preprocess_input_df
 from aequitas.group import Group
 from aequitas.plotting import Plot
+from aequitas.bias import Bias
+from aequitas.fairness import Fairness
+
 import ipdb
 
 class BiasCop:
@@ -29,6 +32,8 @@ class BiasCop:
         self.config.update(kwargs)
         self.results_df = self._preprocess(results_df)
         self.xtab = None
+        self.bdf = None
+        self.fdf = None
 
 
     def xtabs(self):
@@ -48,9 +53,40 @@ class BiasCop:
         """
         Returns a plot. You may have to call plt.show() using matplotlib in
         order to see anything.
+
+        Valid metrics (incomplete list):
+        - fpr
         """
         xtab = self.xtabs()
         plot = Plot().plot_group_metric(xtab, metric)
+        return plot
+
+
+    def plot_disparity(self, metric):
+        """
+        Returns a plot. You may have to call plt.show() using matplotlib in
+        order to see anything.
+
+        Valid metrics (incomplete list):
+        - fpr_disparity
+        """
+        bdf = self._bdf()
+        plot = Plot().plot_disparity(
+            bdf, group_metric=metric, attribute_name='majority_demo'
+        )
+        return plot
+
+
+    def plot_fairness(self, metric):
+        """
+        Returns a plot. You may have to call plt.show() using matplotlib in
+        order to see anything.
+
+        Valid metrics (incomplete list):
+        - fpr
+        """
+        fdf = self._fdf()
+        plot = Plot().plot_fairness_group(fdf, group_metric=metric, title=True)
         return plot
 
 
@@ -91,6 +127,30 @@ class BiasCop:
                 return demo
 
         return 'other'
+
+
+    def _bdf(self):
+        if self.bdf is not None:
+            return self.bdf
+
+        b = Bias()
+        self.bdf = b.get_disparity_predefined_groups(
+            self.xtabs(),
+            original_df=self.results_df,
+            ref_groups_dict={'majority_demo': 'other'},
+            alpha=0.05,
+            check_significance=False
+        )
+        return self.bdf
+
+
+    def _fdf(self):
+        if self.fdf is not None:
+            return self.fdf
+
+        f = Fairness()
+        self.fdf = f.get_group_value_fairness(self._bdf())
+        return self.fdf
 
 
     def _filter_nan(self, val, fallback=0):
