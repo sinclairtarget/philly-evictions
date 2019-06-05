@@ -21,6 +21,10 @@ from sklearn.ensemble import RandomForestRegressor
 
 from .evaluate import ClassifierEvaluator, RegressionEvaluator
 
+COLUMN_DEFAULTS = {
+    'label_col': 'label',
+    'col_blacklist': ['GEOID', 'year'] # Remove before fitting models
+}
 
 seed = 1234
 clfs = {'LR':  LogisticRegression(solver='liblinear', random_state=seed),
@@ -109,8 +113,6 @@ def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds, debug=Fal
 
 
 def run_reg_loop(test_df, train_df, regs, grid, label_col):
-    '''
-    '''
     X_train = train_df.drop(columns=[label_col])
     X_test = test_df.drop(columns=[label_col])
     y_train = train_df[label_col]
@@ -133,12 +135,54 @@ def run_reg_loop(test_df, train_df, regs, grid, label_col):
     return pd.DataFrame(evaluation_table, columns=col_names)
 
 
+def run_one_clf(train_df, test_df, modelname, params, **kwargs):
+    """
+    Runs a single classifier model, returning the test dataframe with a new
+    column for the model's predictions.
+    """
+    col_settings = _col_settings(kwargs)
+    label_col = col_settings['label_col']
+    col_blacklist = col_settings['col_blacklist']
+
+    X_train = train_df.drop(columns=[label_col] + col_blacklist)
+    X_test = test_df.drop(columns=[label_col] + col_blacklist)
+    y_train = train_df[label_col]
+    y_test = test_df[label_col]
+
+    model = clfs[modelname]
+    model.set_params(**params)
+    model.fit(X_train, y_train)
+    y_pred = model.predict_proba(X_test)[:,1]
+
+    return test_df.assign(score=y_pred)
 
 
+def run_one_reg(train_df, test_df, modelname, params, **kwargs):
+    """
+    Runs a single regression model, returning the test dataframe with a new
+    column for the model's predictions.
+    """
+    col_settings = _col_settings(kwargs)
+    label_col = col_settings['label_col']
+    col_blacklist = col_settings['col_blacklist']
+
+    X_train = train_df.drop(columns=[label_col] + col_blacklist)
+    X_test = test_df.drop(columns=[label_col] + col_blacklist)
+    y_train = train_df[label_col]
+    y_test = test_df[label_col]
+
+    model = regs[modelname]
+    model.set_params(**params)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    return test_df.assign(score=y_pred)
 
 
-
-
-
-
-
+def _col_settings(kwargs):
+    """
+    Allows people to override the COLUMN_DEFAULTS dict with new values.
+    """
+    col_settings = COLUMN_DEFAULTS.copy()
+    col_settings.update(kwargs)
+    return col_settings
