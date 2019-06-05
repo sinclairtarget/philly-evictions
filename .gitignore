@@ -1,11 +1,9 @@
 .venv
-*.ipynb*
 *.html
 .doit*
+.ipynb*
 
 proposal/*.ipynb*
 proposal/*.html
 data/acs-summary-files/
 *__pycache__
-
-!analysis.ipynb
