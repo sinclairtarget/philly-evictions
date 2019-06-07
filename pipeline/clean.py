@@ -41,9 +41,9 @@ def clean_overall_data(complete_df):
     df = get_pct_feature(df, 'num_unemployed', 'total_population')
     df['majority_af_am'] = np.where(df['num_af_am_alone_percent'] > .5, 1, 0)
     df['majority_hisp'] = np.where(df['num_hisp_percent'] > .5, 1, 0)
-    df['evictions_change_1_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
-    df['evictions_change_2_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
-    df['evictions_change_5_binary'] = np.where(df['num_hisp_percent'] > 0, 1, 0)
+    df['evictions_change_1_binary'] = np.where(df['evictions_change_1'] > 0, 1, 0)
+    df['evictions_change_2_binary'] = np.where(df['evictions_change_2'] > 0, 1, 0)
+    df['evictions_change_5_binary'] = np.where(df['evictions_change_5'] > 0, 1, 0)
 
     return df
 
