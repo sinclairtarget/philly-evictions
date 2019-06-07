@@ -6,11 +6,7 @@ from sklearn.metrics import *
 from sklearn.tree import DecisionTreeClassifier
 
 def plot_precision_recall_n(model, params, train_df, test_df, label):
-    X_train = train_df.drop(columns=['GEOID', 'year_evictions', label])
-    X_test = test_df.drop(columns=['GEOID', 'year_evictions', label])
-    y_train = train_df[label]
-    y_test = test_df[label]
-
+    X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
     model.set_params(**params)
     model.fit(X_train, y_train)
     pred_scores = model.predict_proba(X_test)[:,1]
@@ -42,6 +38,8 @@ def plot_precision_recall_n(model, params, train_df, test_df, label):
     ax2.plot(pct_above_per_thresh, recall_curve, 'r')
     ax2.set_ylabel('recall', color='r')
     ax1.set_ylim([0,1])
+    ax1.set_xlim([0,1])
+    ax2.set_ylim([0,1])
     ax2.set_xlim([0,1])
     plt.show()
 
