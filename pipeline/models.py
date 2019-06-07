@@ -37,14 +37,14 @@ clfs = {'LR':  LogisticRegression(solver='liblinear', random_state=seed),
         'AB':  AdaBoostClassifier(random_state=seed),
         'NB':  GaussianNB(),
         'ET':  ExtraTreesClassifier(random_state=seed),
-        'BC':  BaggingClassifier(random_state=seed, bootstrap=True), 
+        'BC':  BaggingClassifier(random_state=seed, bootstrap=True),
         'DC':  DummyClassifier(random_state=seed, strategy='most_frequent')}
 
 clfs_tiny = {model: clfs[model] for model in ['LR', 'DT', 'RF']}
 
 clf_tiny_grid =  {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'RF':  {'n_estimators': [100,1000], 'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [5,10]},
-                  'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]}, 
+                  'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]},
                   'DC':  {}}
 
 clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
@@ -56,7 +56,7 @@ clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'AB':  {'algorithm': ['SAMME', 'SAMME.R'], 'n_estimators': [100,1000]},
                   'NB':  {},
                   'ET':  {'n_estimators': [100,1000], 'criterion' : ['gini', 'entropy'] ,'max_depth': [5,10], 'max_features': ['sqrt','log2'],'min_samples_split': [5,10]},
-                  'BC':  {'n_estimators': [100,1000]}, 
+                  'BC':  {'n_estimators': [100,1000]},
                   'DC':  {}}
 
 clf_large_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.01,0.1,1,10]},
@@ -68,7 +68,7 @@ clf_large_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.0
                   'AB':  {'algorithm': ['SAMME', 'SAMME.R'], 'n_estimators': [1,10,100,1000,10000]},
                   'NB':  {},
                   'ET':  {'n_estimators': [1,10,100,1000,10000], 'criterion' : ['gini', 'entropy'] ,'max_depth': [1,5,10,20,50,100], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]},
-                  'BC':  {'n_estimators': [1,10,100,1000,10000]}, 
+                  'BC':  {'n_estimators': [1,10,100,1000,10000]},
                   'DC':  {}}
 
 regs = {'LR': LinearRegression(),

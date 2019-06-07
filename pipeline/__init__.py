@@ -5,4 +5,5 @@ from .clean import *
 from .label import *
 from .bias_cop import BiasCop
 from .explore import *
+from .analyze_best_model import plot_precision_recall_n
 from . import notebook
