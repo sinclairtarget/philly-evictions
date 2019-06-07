@@ -1,18 +1,28 @@
-from sklearn.metrics import precision_recall_curve
+import pandas as pd 
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import * 
 
+from sklearn.tree import DecisionTreeClassifier
 
-def plot_precision_recall_n(y_test, y_prob, model_name):
-    '''
-    CITATION: Leveraged Prof Ghani's magic loop function for plotting precision-recall at thresholds
-    
-    Plots the precision and recall at different thresholds leveraging sklearn's 
-    precision recall function
+def plot_precision_recall_n(model, params, train_df, test_df, label):
+    X_train = train_df.drop(columns=['GEOID', 'year_evictions', label])
+    X_test = test_df.drop(columns=['GEOID', 'year_evictions', label])
+    y_train = train_df[label]
+    y_test = test_df[label]
 
-    Inputs: true label values for the test data set; predicted probability scores from model,
-    name of the model 
-    '''
-    precision_curve, recall_curve, pr_thresholds = precision_recall_curve(y_true, y_prob)
+    model.set_params(**params)
+    model.fit(X_train, y_train)
+    pred_scores = model.predict_proba(X_test)[:,1]
+
+    y_true = y_test
+    y_prob = pred_scores
+
+    print(y_true.mean())
+
+    from sklearn.metrics import precision_recall_curve
+    y_score = y_prob
+    precision_curve, recall_curve, pr_thresholds = precision_recall_curve(y_true, y_score)
     precision_curve = precision_curve[:-1]
     recall_curve = recall_curve[:-1]
     pct_above_per_thresh = []
@@ -32,21 +42,59 @@ def plot_precision_recall_n(y_test, y_prob, model_name):
     ax2.plot(pct_above_per_thresh, recall_curve, 'r')
     ax2.set_ylabel('recall', color='r')
     ax1.set_ylim([0,1])
-    ax1.set_ylim([0,1])
     ax2.set_xlim([0,1])
-    
-    plt.title(model_name)
-    plt.savefig('graphs/'+model_name)
+    plt.show()
 
-def get_feature_importances(model, model_name):
-    '''
-    Note -- this will work for gradient boosting, decision trees, random forest 
-    '''
-    feature_scores = model.feature_importances_
-    d = {'Features': x_train.columns, "Importance": feature_scores}
-    feature_importance = feature_importance.sort_values(by=['Importance'], ascending=False)
-    feature_importance.to_csv('features/'+models_to_run[index]+'_'+str(model_num)+'.csv') 
 
-def plot_precision_at_k(y_test, y_prob, model_name):
-    '''
-    '''
+def top_k_blocks_clf(model, params, train_df, test_df, label, k): 
+    X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
+    model.set_params(**params)
+    model.fit(X_train, y_train)
+    pred_scores = model.predict_proba(X_test)[:,1]
+    test_df['pred_scores'] = pred_scores
+    test_df.sort_values(by='pred_scores', ascending=False, inplace=True)
+    top_16 = test_df.head(int(test_df.shape[0]*k)//1)
+    return top_16[['GEOID', 'label', 'pred_scores']]
+
+
+def top_k_blocks_reg(model, params, train_df, test_df, label, k): 
+    X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
+    model.set_params(**params)
+    model.fit(X_train, y_train)
+    preds = model.predict(X_test)
+    test_df['preds'] = preds
+    test_df.sort_values(by='preds', ascending=False, inplace=True)
+    top_16 = test_df.head(int(test_df.shape[0]*k)//1)
+    return top_16[['GEOID', 'evictions', 'preds']]
+
+
+def feature_importance_clf(model, params, train_df, test_df, label): 
+    X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
+    model.set_params(**params)
+    model.fit(X_train, y_train)    
+    feature_importance = pd.DataFrame(zip(X_test.columns, model.feature_importances_), 
+                                      columns=['feature', 'importance'])
+    feature_importance.sort_values(by='importance', ascending=False, inplace=True)
+    return feature_importance
+
+
+def feature_importance_reg(model, params, train_df, test_df, label): 
+    X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
+    model.set_params(**params)
+    model.fit(X_train, y_train)  
+
+    feature_importance = pd.DataFrame(zip(X_test.columns, model.coef_), 
+                                      columns=['feature', 'coef'])
+    feature_importance['absv_coef'] = feature_importance['coef'].abs()
+    feature_importance.sort_values(by='absv_coef', ascending=False, inplace=True)
+    return feature_importance
+
+
+def split_dfs(train_df, test_df, label): 
+    X_train = train_df.drop(columns=['GEOID', 'year_evictions', label])
+    X_test = test_df.drop(columns=['GEOID', 'year_evictions', label])
+    y_train = train_df[label]
+    y_test = test_df[label]
+    return X_train, X_test, y_train, y_test     
+
+
