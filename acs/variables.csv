@@ -9,6 +9,7 @@ B25001_001E,units
 B25002_002E,occupied_units
 B25003_003E,vacant_units
 B25004_002E,for_rent_units
+B02001_002E,num_white_alone
 B02001_003E,num_af_am_alone
 B03003_003E,num_hisp
 B25003B_002E,black_alone_owner_occupied
