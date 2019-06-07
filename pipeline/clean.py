@@ -72,6 +72,10 @@ def get_feature_generators(train_df):
 
 def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
 
+    #Mark rows where imputation is going to occur
+    train_df = create_impute_flag(train_df)
+    test_df = create_impute_flag(test_df)
+
     #Impute missing values
 
     train_df = train_df.fillna(train_df.median())
@@ -93,8 +97,9 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
       'total_renter_households', 'renter_occupied_household_size',
       'median_gross_rent', 'median_household_income', 'units',
       'occupied_units', 'vacant_units', 'for_rent_units', 'num_af_am_alone',
-      'num_hisp', 'black_alone_owner_occupied', 'evictions_change_1',
-      'evictions_change_2', 'evictions_change_5']
+      'num_hisp', 'black_alone_owner_occupied', 'GEOID_impute_flag',
+       'year_evictions_impute_flag', 'evictions_impute_flag',
+       'low-flag_impute_flag', 'imputed_impute_flag', 'subbed_impute_flag']
 
     train_df = drop_unwanted_columns(train_df, cols_to_drop)
     test_df = drop_unwanted_columns(test_df, cols_to_drop)
@@ -239,6 +244,12 @@ def check_col_match(train_df, test_df):
     test_df = test_df.drop(extra_cols,axis=1)
 
     return test_df
+
+def create_impute_flag(df):
+    for col in df.columns:
+        df[col+'_impute_flag'] = np.where(df[col].isna(), 1, 0)
+    return df
+
 
 
 
