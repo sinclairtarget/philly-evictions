@@ -35,12 +35,14 @@ def clean_overall_data(complete_df):
     df = get_pct_feature(df, 'for_rent_units', 'units')
     df = get_pct_feature(df, 'num_af_am_alone', 'total_population')
     df = get_pct_feature(df, 'num_hisp', 'total_population')
+    df = get_pct_feature(df, 'num_white_alone', 'total_population')
     df = get_pct_feature(df, 'black_alone_owner_occupied', 'units')
     df = get_pct_feature(df, 'num_with_high_school_degree', 'total_population')
     df = get_pct_feature(df, 'num_with_ged', 'total_population')
     df = get_pct_feature(df, 'num_unemployed', 'total_population')
-    df['majority_af_am'] = np.where(df['num_af_am_alone_percent'] > .5, 1, 0)
-    df['majority_hisp'] = np.where(df['num_hisp_percent'] > .5, 1, 0)
+    df['majority_af_am'] = np.where(df['num_af_am_alone_percent'] > .6, 1, 0)
+    df['majority_hisp'] = np.where(df['num_hisp_percent'] > .6, 1, 0)
+    df['majority_white'] = np.where(df['num_white_alone_percent']> .6, 1, 0)
     df['evictions_change_1_binary'] = np.where(df['evictions_change_1'] > 0, 1, 0)
     df['evictions_change_2_binary'] = np.where(df['evictions_change_2'] > 0, 1, 0)
     df['evictions_change_5_binary'] = np.where(df['evictions_change_5'] > 0, 1, 0)
@@ -57,7 +59,7 @@ def get_feature_generators(train_df):
         'total_households', 'total_renter_households',
         'renter_occupied_household_size', 'median_gross_rent',
         'median_household_income', 'units', 'occupied_units', 'vacant_units',
-        'for_rent_units', 'num_af_am_alone', 'num_hisp',
+        'for_rent_units', 'num_af_am_alone', 'num_hisp', 'num_white_alone',
         'black_alone_owner_occupied', 'num_with_high_school_degree',
         'num_with_ged', 'num_unemployed'])
     feature_generator_dict['binaries'] = get_binary_cutoffs(train_df,
@@ -96,7 +98,7 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
       'violations_count', 'total_population', 'total_households',
       'total_renter_households', 'renter_occupied_household_size',
       'median_gross_rent', 'median_household_income', 'units',
-      'occupied_units', 'vacant_units', 'for_rent_units', 'num_af_am_alone',
+      'occupied_units', 'vacant_units', 'for_rent_units', 'num_white_alone','num_af_am_alone',
       'num_hisp', 'black_alone_owner_occupied', 'GEOID_impute_flag',
        'year_evictions_impute_flag', 'evictions_impute_flag',
        'low-flag_impute_flag', 'imputed_impute_flag', 'subbed_impute_flag']
