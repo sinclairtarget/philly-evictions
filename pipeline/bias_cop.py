@@ -5,8 +5,6 @@ from aequitas.plotting import Plot
 from aequitas.bias import Bias
 from aequitas.fairness import Fairness
 
-import ipdb
-
 class BiasCop:
     """
     Wraps Aequitas. Returns metrics measuring bias and fairness of our models.
@@ -23,7 +21,8 @@ class BiasCop:
         'score_col': 'score',
         'demographics': {
             'af_am_alone': 'num_af_am_alone_percent',
-            'hisp': 'num_hisp_percent'
+            'hisp': 'num_hisp_percent',
+            'white_alone': 'num_white_alone_percent'
         }
     }
 
@@ -123,10 +122,10 @@ class BiasCop:
     def _majority(self, df_row):
         for demo, metric in self.config['demographics'].items():
             demo_perc = self._filter_nan(df_row[metric])
-            if demo_perc > 0.5:
+            if demo_perc > 0.66:
                 return demo
 
-        return 'other'
+        return 'mixed'
 
 
     def _bdf(self):
@@ -137,7 +136,7 @@ class BiasCop:
         self.bdf = b.get_disparity_predefined_groups(
             self.xtabs(),
             original_df=self.results_df,
-            ref_groups_dict={'majority_demo': 'other'},
+            ref_groups_dict={'majority_demo': 'white_alone'},
             alpha=0.05,
             check_significance=False
         )
