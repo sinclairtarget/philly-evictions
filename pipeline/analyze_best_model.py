@@ -20,19 +20,23 @@ def plot_precision_recall_n(scored_df):
         pct_above_per_thresh.append(pct_above_thresh)
 
     pct_above_per_thresh = np.array(pct_above_per_thresh)
+    print(precision_curve[-1])
+    print(recall_curve[-1])
 
     plt.clf()
     fig, ax1 = plt.subplots()
     ax1.plot(pct_above_per_thresh, precision_curve, 'b')
-    ax1.set_ylim([0,1])
+
+    margin = 0.01
+    ax1.set_ylim([0-margin,1+margin])
     ax1.set_xlabel('percent of population')
     ax1.set_ylabel('precision', color='b')
 
     ax2 = ax1.twinx()
     ax2.plot(pct_above_per_thresh, recall_curve, 'r')
     ax2.set_ylabel('recall', color='r')
-    ax2.set_ylim([0,1])
-    ax2.set_xlim([0,1])
+    ax2.set_ylim([0-margin,1+margin])
+    ax2.set_xlim([0-margin,1+margin])
     plt.show()
 
 
@@ -72,7 +76,6 @@ def feature_importance_reg(model, params, train_df, test_df, label):
     X_train, X_test, y_train, y_test = split_dfs(train_df, test_df, label)
     model.set_params(**params)
     model.fit(X_train, y_train)
-
     feature_importance = pd.DataFrame(zip(X_test.columns, model.coef_),
                                       columns=['feature', 'coef'])
     feature_importance['absv_coef'] = feature_importance['coef'].abs()

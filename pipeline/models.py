@@ -23,7 +23,6 @@ from sklearn.ensemble import RandomForestRegressor
 from .evaluate import ClassifierEvaluator, RegressionEvaluator
 
 COLUMN_DEFAULTS = {
-    'label_col': 'label',
     'label_clf': 'label', 
     'label_reg': 'evictions', 
     'col_blacklist': ['GEOID', 'year'] # Remove before fitting models
@@ -73,18 +72,15 @@ clf_large_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.0
                   'BC':  {'n_estimators': [1,10,100,1000,10000]},
                   'DC':  {}}
 
-regs = {'LR': LinearRegression(),
-        'SVR': LinearSVR(),
+regs = {'SVR': LinearSVR(),
         'DTR': DecisionTreeRegressor(),
         'RFR': RandomForestRegressor()}
 
-reg_small_grid = {'LR': {},
-                  'SVR': {'C' :[0.01,0.1]},
+reg_small_grid = {'SVR': {'C' :[0.01,0.1]},
                   'DTR': {'max_depth': [5,50], 'max_features': [None],'min_samples_split': [2,5,10]},
                   'RFR': {'n_estimators': [100,1000], 'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]}}
 
-reg_large_grid = {'LR': {},
-                  'SVR': {'C' :[0.00001,0.0001,0.001,0.01,0.1,1,10]},
+reg_large_grid = {'SVR': {'C' :[0.00001,0.0001,0.001,0.01,0.1,1,10]},
                   'DTR': {'max_depth': [1,5,10,20,50,100], 'max_features': [None],'min_samples_split': [2,5,10]},
                   'RFR': {'n_estimators': [1,10,100,1000,10000], 'max_depth': [1,5,10,20,50,100], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]}}
 
@@ -161,7 +157,7 @@ def run_one_clf(train_df, test_df, modelname, params, **kwargs):
     model.fit(X_train, y_train)
     y_pred = model.predict_proba(X_test)[:,1]
 
-    return test_df.assign(score=y_pred)
+    return model, test_df.assign(score=y_pred)
 
 
 def run_one_reg(train_df, test_df, modelname, params, **kwargs):
@@ -183,7 +179,7 @@ def run_one_reg(train_df, test_df, modelname, params, **kwargs):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    return test_df.assign(score=y_pred)
+    return model, test_df.assign(pred_evictions=y_pred)
 
 
 def _col_settings(kwargs):
