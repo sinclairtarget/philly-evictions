@@ -100,8 +100,9 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
       'median_gross_rent', 'median_household_income', 'units',
       'occupied_units', 'vacant_units', 'for_rent_units', 'num_white_alone','num_af_am_alone',
       'num_hisp', 'black_alone_owner_occupied', 'GEOID_impute_flag',
-       'year_evictions_impute_flag', 'evictions_impute_flag',
-       'low-flag_impute_flag', 'imputed_impute_flag', 'subbed_impute_flag']
+      'year_evictions_impute_flag', 'evictions_impute_flag', 'num_with_high_school_degree',
+      'num_with_ged','num_unemployed',
+      'low-flag_impute_flag', 'imputed_impute_flag', 'subbed_impute_flag']
 
     train_df = drop_unwanted_columns(train_df, cols_to_drop)
     test_df = drop_unwanted_columns(test_df, cols_to_drop)
