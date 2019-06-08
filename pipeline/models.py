@@ -24,6 +24,8 @@ from .evaluate import ClassifierEvaluator, RegressionEvaluator
 
 COLUMN_DEFAULTS = {
     'label_col': 'label',
+    'label_clf': 'label', 
+    'label_reg': 'evictions', 
     'col_blacklist': ['GEOID', 'year'] # Remove before fitting models
 }
 
@@ -146,7 +148,7 @@ def run_one_clf(train_df, test_df, modelname, params, **kwargs):
     column for the model's predictions.
     """
     col_settings = _col_settings(kwargs)
-    label_col = col_settings['label_col']
+    label_col = col_settings['label_clf']
     col_blacklist = col_settings['col_blacklist']
 
     X_train = train_df.drop(columns=[label_col] + col_blacklist)
@@ -168,7 +170,7 @@ def run_one_reg(train_df, test_df, modelname, params, **kwargs):
     column for the model's predictions.
     """
     col_settings = _col_settings(kwargs)
-    label_col = col_settings['label_col']
+    label_col = col_settings['label_reg']
     col_blacklist = col_settings['col_blacklist']
 
     X_train = train_df.drop(columns=[label_col] + col_blacklist)
