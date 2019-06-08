@@ -94,17 +94,18 @@ def clean_and_create_features(train_df, test_df, feature_generator_dict=None):
         train_df, test_df = scale_data(train_df, test_df, scalers)
         train_df, test_df = binarize_data(train_df, test_df, binaries)
 
-    cols_to_drop = ['evictions_t-1', 'evictions_t-2', 'evictions_t-5', 'crime_count',
+    cols_to_drop = {'evictions_t-1', 'evictions_t-2', 'evictions_t-5', 'crime_count',
       'violations_count', 'total_population', 'total_households',
       'total_renter_households', 'renter_occupied_household_size',
       'median_gross_rent', 'median_household_income', 'units',
       'occupied_units', 'vacant_units', 'for_rent_units', 'num_white_alone','num_af_am_alone',
       'num_hisp', 'black_alone_owner_occupied', 'GEOID_impute_flag',
-      'year_evictions_impute_flag', 'evictions_impute_flag', 
-      'low-flag_impute_flag', 'imputed_impute_flag', 'subbed_impute_flag']
+      'year_evictions_impute_flag', 'evictions_impute_flag', 'num_with_high_school_degree',
+      'num_with_ged','num_unemployed','low-flag_impute_flag', 
+      'imputed_impute_flag', 'subbed_impute_flag'}
 
-    train_df = drop_unwanted_columns(train_df, cols_to_drop)
-    test_df = drop_unwanted_columns(test_df, cols_to_drop)
+    train_df = drop_unwanted_columns(train_df, set(train_df.columns) & cols_to_drop)
+    test_df = drop_unwanted_columns(test_df, set(test_df.columns) & cols_to_drop)
 
     return train_df, test_df
 
