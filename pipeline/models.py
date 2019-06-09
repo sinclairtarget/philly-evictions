@@ -95,10 +95,6 @@ def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds, debug=Fal
     X_test = test_df.drop(columns=[label_col])
     y_train = train_df[label_col]
     y_test = test_df[label_col]
-    if not counter: 
-      counter = 0
-    counter += 1 
-
     evaluation_table = []
     col_names = ['classifier', 'parameters', 'threshold'] + ClassifierEvaluator.metric_names()
 
@@ -116,9 +112,6 @@ def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds, debug=Fal
             for t in thresholds:
                 evaluator = ClassifierEvaluator(scores, y_test, t)
                 evaluation_table.append([c, p, t] + evaluator.all_metrics())
-
-            filename = 'results/pr' + str(counter) + '.jpg'
-            analyze_best_model.plot_precision_recall_n(scores, filename)
 
     return pd.DataFrame(evaluation_table, columns=col_names)
 
