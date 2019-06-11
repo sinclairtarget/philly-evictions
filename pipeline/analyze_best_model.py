@@ -12,9 +12,9 @@ import pydotplus
 
 
 def feature_importance(model, features): 
-    """
+    '''
     Returns sorted df with feature names and their importance. 
-    """
+    '''
     all_vars = list(features)
     features = [v for v in all_vars if v not in (
         'GEOID', 'year_evictions', 'evictions', 'label')]
@@ -25,24 +25,24 @@ def feature_importance(model, features):
 
 
 def select_k_blocks(df, k, sort_vars, output_vars): 
-    """
+    '''
     Returns a df with the top k percent of blocks (based on sort_vars). 
     Only output_vars are returned. 
-    """
+    '''
     num_blocks = int(df.shape[0]*k)//1 
     selected_blocks = df.nlargest(num_blocks, sort_vars)[output_vars]
     return selected_blocks
 
 
 def clf_reg_comparison(clf, clf_scores, reg, reg_scores, test_df, k):
-    """
+    '''
     Returns a df comparing how the clf and reg models perform in predicting 
     the top k percent of blocks in the test_df. Returns the top k percent of 
     blocks in the test_df, along with that block's predicted score and 
     predicted label (from the clf) and predicted evictions (from the reg). 
     Blank predictions indicate that the clf/reg didn't predict that block 
     group to be in the top k percent. 
-    """
+    '''
     test_blocks = select_k_blocks(test_df, k, ['evictions'], ['GEOID', 'evictions'])
     clf_blocks = select_k_blocks(clf_scores, k, ['score'], ['GEOID', 'score', 'label'])
     reg_blocks = select_k_blocks(reg_scores, k, ['pred_evictions'], ['GEOID', 'pred_evictions'])
@@ -58,9 +58,9 @@ def clf_reg_comparison(clf, clf_scores, reg, reg_scores, test_df, k):
 
 
 def plot_tree(tree, df, output_filename): 
-    """
+    '''
     Saves a decision tree to output_filename. 
-    """
+    '''
     col_names = list(df.drop(columns=['GEOID', 'year_evictions', 'label']).columns)
     dot_data = StringIO()
     export_graphviz(tree, out_file=dot_data, feature_names=col_names, special_characters=True)
@@ -68,10 +68,10 @@ def plot_tree(tree, df, output_filename):
     graph.write_png(output_filename)
 
 
-def plot_precision_recall_n(scored_df, filename, vertical_line):
-    """
+def plot_precision_recall_n(scored_df, filename, vertical_line, name):
+    '''
     Outputs a precision-recall curve (shows in notebook and saves to filename). 
-    """
+    '''
     y_true = scored_df.label
     y_score = scored_df.score
     precision_curve, recall_curve, pr_thresholds = _precision_recall_curve_no_truncate(y_true, y_score)
@@ -97,14 +97,15 @@ def plot_precision_recall_n(scored_df, filename, vertical_line):
     ax2.set_xlim([0-margin,1+margin])
     plt.axvline(x=0.14, color='grey')
     plt.savefig(filename)
+    plt.title(name)
     plt.show()
 
 
 def _precision_recall_curve_no_truncate(y_true, y_score):
-    """
+    '''
     Reimplementation of sklearn precision_recall_curve function that doesn't
     truncate thresholds array once recall is 1.
-    """
+    '''
     fps, tps, thresholds = _binary_clf_curve(y_true, y_score)
 
     precision = tps / (tps + fps)
