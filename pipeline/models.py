@@ -41,14 +41,16 @@ clfs = {'LR':  LogisticRegression(solver='liblinear', random_state=seed),
         'NB':  GaussianNB(),
         'ET':  ExtraTreesClassifier(random_state=seed),
         'BC':  BaggingClassifier(random_state=seed, bootstrap=True),
-        'DC':  DummyClassifier(random_state=seed, strategy='most_frequent')}
+        'DC':  DummyClassifier(random_state=seed, strategy='most_frequent'),
+        'LB':  LogisticRegression(solver='liblinear', random_state=seed)}
 
-clfs_tiny = {model: clfs[model] for model in ['LR', 'DT', 'RF']}
+clfs_tiny = {model: clfs[model] for model in ['LR', 'DT', 'RF','DC','LB']}
 
 clf_tiny_grid =  {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'RF':  {'n_estimators': [100,1000], 'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [5,10]},
                   'DT':  {'criterion': ['gini', 'entropy'], 'max_depth': [5,50], 'max_features': [None],'min_samples_split': [5,10]},
-                  'DC':  {}}
+                  'DC':  {},
+                  'LB':  {}}
 
 clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'KNN': {'n_neighbors': [5,10],'weights': ['uniform','distance'],'algorithm': ['auto','ball_tree','kd_tree']},
@@ -60,7 +62,8 @@ clf_small_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.01,0.1]},
                   'NB':  {},
                   'ET':  {'n_estimators': [100,1000], 'criterion' : ['gini', 'entropy'] ,'max_depth': [5,10], 'max_features': ['sqrt','log2'],'min_samples_split': [5,10]},
                   'BC':  {'n_estimators': [100,1000]},
-                  'DC':  {}}
+                  'DC':  {},
+                  'LB':  {}}
 
 clf_large_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.01,0.1,1,10]},
                   'KNN': {'n_neighbors': [1,5,10,25,50,100],'weights': ['uniform','distance'],'algorithm': ['auto','ball_tree','kd_tree']},
@@ -72,7 +75,8 @@ clf_large_grid = {'LR':  {'penalty': ['l1','l2'], 'C': [0.00001,0.0001,0.001,0.0
                   'NB':  {},
                   'ET':  {'n_estimators': [1,10,100,1000,10000], 'criterion' : ['gini', 'entropy'] ,'max_depth': [1,5,10,20,50,100], 'max_features': ['sqrt','log2'],'min_samples_split': [2,5,10]},
                   'BC':  {'n_estimators': [1,10,100,1000,10000]},
-                  'DC':  {}}
+                  'DC':  {},
+                  'LB':  {}}
 
 regs = {'SVR': LinearSVR(),
         'DTR': DecisionTreeRegressor(),
@@ -100,6 +104,10 @@ def run_clf_loop(test_df, train_df, clfs, grid, label_col, thresholds, debug=Fal
 
     for c, model in clfs.items():
         parameter_values = grid[c]
+
+        #for baseline of only last year's evictions feature
+        if model == 'LB':
+            X_train = X_train['evictions_t-1_scaled']
 
         for p in ParameterGrid(parameter_values):
             if debug:
