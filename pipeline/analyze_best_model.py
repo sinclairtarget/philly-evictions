@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import *
 from sklearn.metrics.ranking import _binary_clf_curve
 from functools import reduce
+from os import path
 
 from sklearn.externals.six import StringIO  
 from IPython.display import Image  
@@ -57,18 +58,18 @@ def clf_reg_comparison(clf, clf_scores, reg, reg_scores, test_df, k):
     return merged_df
 
 
-def plot_tree(tree, df, output_filename): 
+def plot_tree(tree, df, filename, year): 
     '''
-    Saves a decision tree to output_filename. 
+    Saves a decision tree. 
     '''
     col_names = list(df.drop(columns=['GEOID', 'year_evictions', 'label']).columns)
     dot_data = StringIO()
     export_graphviz(tree, out_file=dot_data, feature_names=col_names, special_characters=True)
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
-    graph.write_png(output_filename)
+    graph.write_png(path.join('results', str(year), filename))
 
 
-def plot_precision_recall_n(scored_df, filename, vertical_line, name):
+def plot_precision_recall_n(scored_df, vertical_line, title, filename, year):
     '''
     Outputs a precision-recall curve (shows in notebook and saves to filename). 
     '''
@@ -96,8 +97,8 @@ def plot_precision_recall_n(scored_df, filename, vertical_line, name):
     ax2.set_ylim([0-margin,1+margin])
     ax2.set_xlim([0-margin,1+margin])
     plt.axvline(x=0.14, color='grey')
-    plt.savefig(filename)
-    plt.title(name)
+    plt.savefig(path.join('results', str(year), filename))
+    plt.title(title)
     plt.show()
 
 
