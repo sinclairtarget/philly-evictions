@@ -5,6 +5,11 @@ from sklearn.metrics import *
 from sklearn.metrics.ranking import _binary_clf_curve
 from functools import reduce
 
+from sklearn.externals.six import StringIO  
+from IPython.display import Image  
+from sklearn.tree import export_graphviz
+import pydotplus
+
 
 def feature_importance(model, features): 
     """
@@ -52,14 +57,24 @@ def clf_reg_comparison(clf, clf_scores, reg, reg_scores, test_df, k):
     return merged_df
 
 
-def plot_precision_recall_n(scored_df, filename):
+def plot_tree(tree, df, output_filename): 
+    """
+    Saves a decision tree to output_filename. 
+    """
+    col_names = list(df.drop(columns=['GEOID', 'year_evictions', 'label']).columns)
+    dot_data = StringIO()
+    export_graphviz(tree, out_file=dot_data, feature_names=col_names, special_characters=True)
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+    graph.write_png(output_filename)
+
+
+def plot_precision_recall_n(scored_df, filename, vertical_line):
     """
     Outputs a precision-recall curve (shows in notebook and saves to filename). 
     """
     y_true = scored_df.label
     y_score = scored_df.score
-    precision_curve, recall_curve, pr_thresholds = \
-        _precision_recall_curve_no_truncate(y_true, y_score)
+    precision_curve, recall_curve, pr_thresholds = _precision_recall_curve_no_truncate(y_true, y_score)
     number_scored = len(y_score)
     pct_above_per_thresh = []
     for value in pr_thresholds:
@@ -80,6 +95,7 @@ def plot_precision_recall_n(scored_df, filename):
     ax2.set_ylabel('recall', color='r')
     ax2.set_ylim([0-margin,1+margin])
     ax2.set_xlim([0-margin,1+margin])
+    plt.axvline(x=0.14, color='grey')
     plt.savefig(filename)
     plt.show()
 
