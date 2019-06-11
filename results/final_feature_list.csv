@@ -1,0 +1,179 @@
+feature,source,parameter_varied,type,included
+black_alone_owner_occupied_impute_flag,ACS,,binary,1
+black_alone_owner_occupied_percent,ACS,,continuous,1
+black_alone_owner_occupied_percent_impute_flag,ACS,,binary,1
+black_alone_owner_occupied_scaled,ACS,,continuous,1
+crime_count_impute_flag,OpenDataPhilly,,binary,1
+crime_count_percent,OpenDataPhilly/ACS,,continuous,1
+crime_count_percent_binary,OpenDataPhilly/ACS,,binary,1
+crime_count_percent_impute_flag,OpenDataPhilly/ACS,,binary,1
+crime_count_scaled,OpenDataPhilly,,continuous,1
+evictions_change_1,Eviction Lab,time,continuous,1
+evictions_change_1_binary,Eviction Lab,time,binary,1
+evictions_change_1_binary_impute_flag,Eviction Lab,time,binary,1
+evictions_change_1_impute_flag,Eviction Lab,time,binary,1
+evictions_change_2,Eviction Lab,time,continuous,1
+evictions_change_2_binary,Eviction Lab,time,binary,1
+evictions_change_2_binary_impute_flag,Eviction Lab,time,binary,1
+evictions_change_2_impute_flag,Eviction Lab,time,binary,1
+evictions_change_5,Eviction Lab,time,continuous,1
+evictions_change_5_binary,Eviction Lab,time,binary,1
+evictions_change_5_binary_impute_flag,Eviction Lab,time,binary,1
+evictions_change_5_impute_flag,Eviction Lab,time,binary,1
+evictions_t-1_impute_flag,Eviction Lab,time,binary,1
+evictions_t-1_scaled,Eviction Lab,time,continuous,1
+evictions_t-2_impute_flag,Eviction Lab,time,binary,1
+evictions_t-2_scaled,Eviction Lab,time,continuous,1
+evictions_t-5_impute_flag,Eviction Lab,time,binary,1
+evictions_t-5_scaled,Eviction Lab,time,continuous,1
+for_rent_units_impute_flag,ACS,,binary,1
+for_rent_units_percent,ACS,,continuous,1
+for_rent_units_percent_impute_flag,ACS,,binary,1
+for_rent_units_scaled,ACS,,continuous,1
+imputed,ACS,,binary,1
+low-flag,ACS,,binary,1
+majority_af_am,ACS,,binary,1
+majority_af_am_impute_flag,ACS,,binary,1
+majority_hisp,ACS,,binary,1
+majority_hisp_impute_flag,ACS,,binary,1
+majority_white,ACS,,binary,1
+majority_white_impute_flag,ACS,,binary,1
+median_gross_rent_impute_flag,ACS,,binary,1
+median_gross_rent_scaled,ACS,,continuous,1
+median_household_income_impute_flag,ACS,,binary,1
+median_household_income_scaled,ACS,,continuous,1
+num_af_am_alone_impute_flag,ACS,,binary,1
+num_af_am_alone_percent,ACS,,continuous,1
+num_af_am_alone_percent_impute_flag,ACS,,binary,1
+num_af_am_alone_scaled,ACS,,continuous,1
+num_hisp_impute_flag,ACS,,binary,1
+num_hisp_percent,ACS,,continuous,1
+num_hisp_percent_impute_flag,ACS,,binary,1
+num_hisp_scaled,ACS,,continuous,1
+num_unemployed_impute_flag,ACS,,binary,1
+num_unemployed_percent,ACS,,continuous,1
+num_unemployed_percent_binary,ACS,,binary,1
+num_unemployed_percent_impute_flag,ACS,,binary,1
+num_unemployed_scaled,ACS,,continuous,1
+num_white_alone_impute_flag,ACS,,binary,1
+num_white_alone_percent,ACS,,continuous,1
+num_white_alone_percent_impute_flag,ACS,,binary,1
+num_white_alone_scaled,ACS,,continuous,1
+num_with_ged_impute_flag,ACS,,binary,1
+num_with_ged_percent,ACS,,continuous,1
+num_with_ged_percent_impute_flag,ACS,,binary,1
+num_with_ged_scaled,ACS,,continuous,1
+num_with_high_school_degree_impute_flag,ACS,,binary,1
+num_with_high_school_degree_percent,ACS,,continuous,1
+num_with_high_school_degree_percent_impute_flag,ACS,,binary,1
+num_with_high_school_degree_scaled,ACS,,continuous,1
+occupied_units_impute_flag,ACS,,binary,1
+occupied_units_scaled,ACS,,continuous,1
+renter_occupied_household_size_impute_flag,ACS,,binary,1
+renter_occupied_household_size_scaled,ACS,,continuous,1
+subbed,ACS,,binary,1
+total_households_impute_flag,ACS,,binary,1
+total_households_scaled,ACS,,continuous,1
+total_population_impute_flag,ACS,,binary,1
+total_population_scaled,ACS,,continuous,1
+total_renter_households_impute_flag,ACS,,binary,1
+total_renter_households_percent,ACS,,continuous,1
+total_renter_households_percent_binary,ACS,,binary,1
+total_renter_households_percent_impute_flag,ACS,,binary,1
+total_renter_households_scaled,ACS,,continuous,1
+units_impute_flag,ACS,,binary,1
+units_scaled,ACS,,continuous,1
+vacant_units_impute_flag,ACS,,binary,1
+vacant_units_percent,ACS,,continuous,1
+vacant_units_percent_binary,ACS,,binary,1
+vacant_units_percent_impute_flag,ACS,,binary,1
+vacant_units_scaled,ACS,,continuous,1
+violations_count_impute_flag,OpenDataPhilly,,binary,1
+violations_count_percent,OpenDataPhilly,,continuous,1
+violations_count_percent_binary,OpenDataPhilly/ACS,,binary,1
+violations_count_percent_impute_flag,OpenDataPhilly/ACS,,binary,1
+violations_count_scaled,OpenDataPhilly,,continuous,1
+poverty_rate,,,continuous,0
+poverty_rate-t-n,,time,continuous,0
+poverty_rate_change_n,,time,continuous,0
+surrounding_evictions,,geography,continuous,0
+surrounding_evictions_t-n,,geography,continuous,0
+surrounding_evictions_change_n,,geography/time,continuous,0
+black_alone_owner_occupied_t-n,,time,continuous,0
+surrounding_black_along_owner_occupied,,geography,continuous,0
+surrounding_black_along_owner_occupied_t-n,,geography/time,continuous,0
+crime_count_t-n,,time,continuous,0
+surrounding_crime_count,,geography,continuous,0
+surrounding_crime_count_t-n,,geography/time,continuous,0
+crime_percent_t-n,,time,continuous,0
+surrounding_crime_percent,,geography,continuous,0
+surrounding_crime_percent_t-n,,geography/time,continuous,0
+median_gross_rent_t-n,,time,continuous,0
+surrounding_median_gross_rent,,geography,continuous,0
+surrounding_median_gross_rent_t-n,,geography/time,continuous,0
+median_gross_income_t-n,,time,continuous,0
+surrounding_median_gross_income,,geography,continuous,0
+surrounding_median_gross_income_t-n,,geography/time,continuous,0
+num_af_am_alone_t-n,,time,continuous,0
+surrounding_num_af_am_alone,,geography,continuous,0
+surrounding_num_af_am_alone_t-n,,geography/time,continuous,0
+af_am_alone_percent_t-n,,time,continuous,0
+surrounding_af_am_alone_percent,,geography,continuous,0
+surrounding_af_am_alone_percent_t-n,,geography/time,continuous,0
+num_hisp_t-n,,time,continuous,0
+surrounding_hisp,,geography,continuous,0
+surrounding_hisp_t-n,,geography/time,continuous,0
+hisp_percent_t-n,,time,continuous,0
+surrounding_hisp_percent,,geography,continuous,0
+surrounding_hisp_percent_t-n,,geography/time,continuous,0
+num_unemployed_t-n,,time,continuous,0
+surrounding_unemployed,,geography,continuous,0
+surrounding_unemployed_t-n,,geography/time,continuous,0
+unemployed_percent_t-n,,time,continuous,0
+surrounding_unemployed_percent,,geography,continuous,0
+surrounding_unemployed_percent_t-n,,geography/time,continuous,0
+num_white_t-n,,time,continuous,0
+surrounding_white,,geography,continuous,0
+surrounding_white_t-n,,geography/time,continuous,0
+white_percent_t-n,,time,continuous,0
+surrounding_white_percent,,geography,continuous,0
+surrounding_white_percent_t-n,,geography/time,continuous,0
+num_with_ged_t-n,,time,continuous,0
+surrounding_num_with_ged,,geography,continuous,0
+surrounding_num_with_ged_t-n,,geography/time,continuous,0
+percent_with_ged_t-n,,time,continuous,0
+surrounding_percent_with_ged,,geography,continuous,0
+surrounding_percent_with_ged_t-n,,geography/time,continuous,0
+num_with_high_school_degree_t-n,,time,continuous,0
+surrounding_num_with_high_school_degree,,geography,continuous,0
+surrounding_num_with_high_school_degree_t-n,,geography/time,continuous,0
+percent_with_high_school_degree_t-n,,time,continuous,0
+surrounding_percent_with_high_school_degree,,geography,continuous,0
+surrounding_percent_with_high_school_degree_t-n,,geography/time,continuous,0
+occupied_units_t-n,,time,continuous,0
+surrounding_occupied_units,,geography,continuous,0
+surrounding_occupied_units_t-n,,geography/time,continuous,0
+percent_occupied_units_t-n,,time,continuous,0
+surrounding_percent_occupied_units,,geography,continuous,0
+surrounding_percent_occupied_units_t-n,,geography/time,continuous,0
+population_t-n,,time,continuous,0
+surrounding_population,,geography,continuous,0
+surrounding_population_t-n,,geography/time,continuous,0
+renter_households_t-n,,time,continuous,0
+surrounding_renter_households,,geography,continuous,0
+surrounding_renter_households_t-n,,geography/time,continuous,0
+percent_renter_households_t-n,,time,continuous,0
+surrounding_percent_renter_households,,geography,continuous,0
+surrounding_percent_renter_households_t-n,,geography/time,continuous,0
+vacant_units_t-n,,time,continuous,0
+surrounding_vacant_units,,geography,continuous,0
+surrounding_vacant_units_t-n,,geography/time,continuous,0
+percent_vacant_units_t-n,,time,continuous,0
+surrounding_percent_vacant_units,,geography,continuous,0
+surrounding_percent_vacant_units_t-n,,geography/time,continuous,0
+violations_count_t-n,,time,continuous,0
+surrounding_violations_count,,geography,continuous,0
+surrounding_violations_count_t-n,,geography/time,continuous,0
+percent_violations_count_t-n,,time,continuous,0
+surrounding_percent_violations_count,,geography,continuous,0
+surrounding_percent_violations_count,,geography/time,continuous,0
