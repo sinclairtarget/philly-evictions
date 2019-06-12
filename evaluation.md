@@ -15,12 +15,12 @@ jupyter:
 # Model Evaluation
 ```python
 # Imports + read in files
-from pipeline import find_best_model
+from pipeline import find_best_model, analyze_best_model
 import pandas as pd
 import matplotlib.pyplot as plt
 
-reg_df = pd.read_csv('results/reg-small-grid_ay.csv')
-clf_df = pd.read_csv('results/clf-small-grid_ay.csv')
+reg_df = pd.read_csv('results/evaluation_results/reg-small-grid_ay.csv')
+clf_df = pd.read_csv('results/evaluation_results/clf-small-grid_ay.csv')
 ```
 
 ```python
@@ -300,7 +300,7 @@ train_df, test_df = labeled_splits[-1]
 ## Classifier Model
 ```python
 params = {'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 1000, 'subsample': 0.5}
-clf_pred_df = pipeline.run_one_clf(
+_, clf_pred_df = pipeline.run_one_clf(
     train_df,
     test_df,
     'GB',
@@ -324,7 +324,7 @@ clf_cop.plot_fairness('for')
 ## Regression Model
 ```python
 params = {'max_depth': 50, 'max_features': None, 'min_samples_split': 10}
-reg_pred_df = pipeline.run_one_reg(
+_, reg_pred_df = pipeline.run_one_reg(
     train_df,
     test_df,
     'DTR',
@@ -338,7 +338,7 @@ reg_pred_df = pipeline.label_df(
     reg_pred_df,
     14,
     label_col='pred_label',
-    evictions_col='score'
+    evictions_col='pred_evictions'
 )
 
 reg_cop = BiasCop(reg_pred_df, score_col='pred_label')
