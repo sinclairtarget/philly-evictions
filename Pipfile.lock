@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e57f691f4e77cc60dbb17b124c28b4a9b6f579219e7589385f5108340969df17"
+            "sha256": "cab98c15408f7c4b14e83bbb6c15d663ecf1132d29c4cc8084eeb0c188f585ed"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -312,13 +312,6 @@
             ],
             "version": "==4.4.0"
         },
-        "jupytext": {
-            "hashes": [
-                "sha256:1744100870a8c104d91ae1a82a9e613e12dbc5927b7f30f2d7c7c0930d643dc7"
-            ],
-            "index": "pypi",
-            "version": "==1.1.6"
-        },
         "kiwisolver": {
             "hashes": [
                 "sha256:05b5b061e09f60f56244adc885c4a7867da25ca387376b02c1efc29cc16bcd0f",
@@ -412,13 +405,6 @@
                 "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"
             ],
             "version": "==0.8.4"
-        },
-        "mock": {
-            "hashes": [
-                "sha256:83657d894c90d5681d62155c82bda9c1187827525880eda8ff5df4ec813437c3",
-                "sha256:d157e52d4e5b938c550f39eb2fd15610db062441a9c2747d3dbfa9298211d0f8"
-            ],
-            "version": "==3.0.5"
         },
         "munch": {
             "hashes": [
@@ -877,13 +863,6 @@
                 "sha256:de08e141f83c3a0798b050ecb097ab6259c3f0331b2f7b7750c9075ced2c20c2"
             ],
             "version": "==0.8.2"
-        },
-        "testfixtures": {
-            "hashes": [
-                "sha256:1fec9b69328777c7ca4b0f645325ce71de5368551e897b957d514d0f9bb10d3e",
-                "sha256:772c9e3a2743782c9e432de4334da71d2896a94a35748d60dbcdd30271010beb"
-            ],
-            "version": "==6.9.0"
         },
         "testpath": {
             "hashes": [

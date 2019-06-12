@@ -70,8 +70,8 @@ labeled_splits = [pipeline.label(split, lower_bound=15, drop_column=True)
 ## Model Generation
 ### Binary Classifiers
 ```python
-clfs = pipeline.clfs
-clfs_grid = pipeline.clf_small_grid
+clfs = pipeline.clfs_tiny
+clfs_grid = pipeline.clf_tiny_grid
 ```
 
 Our binary classifiers are given by the following list:

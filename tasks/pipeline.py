@@ -24,18 +24,6 @@ def task_merge():
     }
 
 
-def create_notebook(target):
-    file_dep = re.sub(r'\.ipynb', '.md', target)
-    return {
-        'name': 'notebook',
-        'file_dep': [file_dep],
-        'targets': [target],
-        'actions': [
-            f"jupytext --to notebook {file_dep}"
-        ]
-    }
-
-
 def task_train():
     """Trains models and saves results into results/ directory."""
     split_dir = 'results/time_splits'
@@ -48,10 +36,7 @@ def task_train():
     data_dep = 'data/final_merged_df.csv'
     notebook_dep = 'train.ipynb'
 
-    yield create_notebook(notebook_dep)
-
-    yield {
-        'name': 'run',
+    return {
         'file_dep': [data_dep, notebook_dep],
         'targets': [
             split_target,
@@ -72,11 +57,8 @@ def task_evaluate():
     clf_dep = results_dir + '/clf-small-grid_ay.csv'
     reg_dep = results_dir + '/reg-small-grid_ay.csv'
 
-    yield create_notebook(notebook_dep)
-
-    yield {
-        'name': 'run',
-        'file_dep': [clf_dep, reg_dep],
+    return {
+        'file_dep': [clf_dep, reg_dep, notebook_dep],
         'actions': [
             'jupyter nbconvert --execute --to html'
             f" --ExecutePreprocessor.timeout=86400 {notebook_dep}"

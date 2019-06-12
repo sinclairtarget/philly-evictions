@@ -2,7 +2,6 @@
 *.html
 .doit*
 .ipynb*
-*.ipynb
 *.html
 
 proposal/*.ipynb*
