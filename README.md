@@ -4,7 +4,12 @@ See [our training notebook](train.ipynb) for our model training process and
 [our evaluation notebook](evaluation.ipynb) for our model evaluation work.
 
 A table showing train/test set time split boundaries is available
-[here](./results/time_splits/time_split_ay.csv).
+[here](./results/time_splits/time_split_ay.csv). These splits are based on a
+temporal cross-validation approach that uses cumulative training sets.
+
+Another table showing train/test set time split boundaries is also available
+[here](./results/time_splits/time_split_ly.csv). These splits are based on only
+using one year for a training set.
 
 A feature list showing features we included and wanted to include is available
 [here](./results/final_feature_list.csv).
@@ -14,6 +19,9 @@ file](./results/2016/clf_feature_importance.csv) is an example.
 
 The final list of block groups (to prioritize for intervention) is given
 [here](./results/2016/clf_selected_blocks.csv).
+
+Other files including PR curves etc. are also available for each year, for
+example see [2016](./results/2016).
 
 ## Running the Project (Quick Start)
 In order to run the project yourself and execute the training and evaluation
