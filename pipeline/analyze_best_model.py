@@ -45,14 +45,13 @@ def clf_reg_comparison(clf, clf_scores, reg, reg_scores, test_df, k):
     group to be in the top k percent. 
     '''
     test_blocks = select_k_blocks(test_df, k, ['evictions'], ['GEOID', 'evictions'])
-    clf_blocks = select_k_blocks(clf_scores, k, ['score'], ['GEOID', 'score', 'label'])
+    clf_blocks = select_k_blocks(clf_scores, k, ['score'], ['GEOID', 'score'])
     reg_blocks = select_k_blocks(reg_scores, k, ['pred_evictions'], ['GEOID', 'pred_evictions'])
     merged_df = reduce(lambda left, right: pd.merge(
         left, right, on='GEOID', how='left'), [test_blocks, clf_blocks, reg_blocks])
     merged_df.rename(columns={
         'evictions': 'actual_evictions', 
         'score': 'clf_pred_score', 
-        'label': 'clf_pred_label', 
         'pred_evictions': 'reg_pred_evictions'}, inplace=True)
     merged_df.sort_values(by='actual_evictions', ascending=False, inplace=True)
     return merged_df
@@ -97,8 +96,8 @@ def plot_precision_recall_n(scored_df, vertical_line, title, filename, year):
     ax2.set_ylim([0-margin,1+margin])
     ax2.set_xlim([0-margin,1+margin])
     plt.axvline(x=0.14, color='grey')
-    plt.savefig(path.join('results', str(year), filename))
     plt.title(title)
+    plt.savefig(path.join('results', str(year), filename), dpi=300)
     plt.show()
 
 
