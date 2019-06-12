@@ -1,27 +1,23 @@
 # Prioritizing Tenant Legal Aid in Philadelphia
 ## Results
 See [our training notebook](train.ipynb) for our model training process and
-[our evaluation notebook](evaluation.ipynb) for our model evaluation work.
+[our evaluation notebook](evaluation.ipynb) for our model evaluation work. 
 
-A table showing train/test set time split boundaries is available
-[here](./results/time_splits/time_split_ay.csv). These splits are based on a
-temporal cross-validation approach that uses cumulative training sets.
+Tables showing train/test set time split boundaries are available
+[here](./results/time_splits/time_split_ay.csv) and [here](./results/time_splits/time_split_ly.csv). The first is based on a temporal cross-validation approach that uses cumulative training sets. The second is based on an approach using only the previous year as a training set. 
 
-Another table showing train/test set time split boundaries is also available
-[here](./results/time_splits/time_split_ly.csv). These splits are based on only
-using one year for a training set.
-
-A feature list showing features we included and wanted to include is available
+A feature list showing the features we included and wanted to include is available
 [here](./results/final_feature_list.csv).
 
-We have recorded feature importance for every year. [This
+We have recorded feature importance for every validation split. [This
 file](./results/2016/clf_feature_importance.csv) is an example.
 
 The final list of block groups (to prioritize for intervention) is given
 [here](./results/2016/clf_selected_blocks.csv).
 
-Other files including PR curves etc. are also available for each year, for
-example see [2016](./results/2016).
+Other files are also available for each validation set, for
+example see [2016](./results/2016). This includes precision-recall curves for the best classifier and baseline (using just the previous year's evictions as a feature); the list of selected block groups based on the best classifier and best regressor; feature importance based on the best classifier and best regressor; a one-level "stump" decision tree; and a map based on the blocks identified by the best classifier. 
+
 
 ## Running the Project (Quick Start)
 In order to run the project yourself and execute the training and evaluation
