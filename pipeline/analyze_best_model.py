@@ -97,7 +97,7 @@ def plot_precision_recall_n(scored_df, vertical_line, title, filename, year):
     ax2.set_xlim([0-margin,1+margin])
     plt.axvline(x=0.14, color='grey')
     plt.title(title)
-    plt.savefig(path.join('results', str(year), filename), dpi=300)
+    plt.savefig(path.join('results', str(year), filename), dpi=150)
     plt.show()
 
 
