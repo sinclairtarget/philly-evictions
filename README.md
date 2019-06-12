@@ -1,4 +1,33 @@
 # Prioritizing Tenant Legal Aid in Philadelphia
+## Results
+See [our training notebook](train.ipynb) for our model training process and
+[our evaluation notebook](evaluation.ipynb) for our model evaluation work.
+
+A table showing train/test set time split boundaries is available
+[here](./results/time_splits/time_split_ay.csv).
+
+A feature list showing features we included and wanted to include is available
+[here](./results/final_feature_list.csv).
+
+We have recorded feature importance for every year. [This
+file](./results/2016/clf_feature_importance.csv) is an example.
+
+The final list of block groups (to prioritize for intervention) is given
+[here](./results/2016/clf_selected_blocks.csv).
+
+## Running the Project (Quick Start)
+In order to run the project yourself and execute the training and evaluation
+notebooks, first you will need to install the Python dependencies:
+```
+$ pipenv install
+```
+
+Then you will need to run all the pre-defined tasks (see below for more on
+tasks):
+```
+$ doit
+```
+
 ## Project Setup
 ### Pipenv
 The project's Python dependencies are managed by
@@ -54,7 +83,7 @@ example:
 This automatically runs the correct version of Jupyter.
 
 ### Doit
-[doit](http://pydoit.org/) is a built tool / task runner. It's a handy
+[doit](http://pydoit.org/) is a build tool / task runner. It's a handy
 alternative to writing a bunch of shell scripts and its very good at creating a
 pipeline where one step depends on a previous step.
 
@@ -63,15 +92,10 @@ To see all the tasks currently defined in the project, run:
 (philly-evictions) $ doit list
 ```
 
-## Downloading ACS Data
-You can download ACS data using two separate doit tasks.
+To run all the necessary data gathering / augmentation steps, run:
+```
+(philly-evictions) $ doit merge
+```
 
-If you run `doit acs_pull_api`, you will download ACS data for 2013 to 2016
-from the Census API.
-
-If you run `doit acs_pull_files`, you will download ACS summary files and
-extract variables from them for 2009 to 2012. Downloading the ACS summary files
-can take a while.
-
-You can edit [this variable list](./acs/variables.csv) to control what ACS
-variables get downloaded.
+WARNING: The above task can take a while to complete, since it has to download
+lots of ACS data!
