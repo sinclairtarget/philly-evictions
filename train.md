@@ -28,10 +28,10 @@ We have data for 2009 to 2016. We want to split this data into training set /
 test set pairs using a temporal cross-validation approach.
 
 ```python
-split_output_filename = 'results/time_splits/time_split_ly.csv'
-clf_output_filename = 'results/evaluation_results/clf-small-grid_ly.csv'
-reg_output_filename = 'results/evaluation_results/reg-small-grid_ly.csv'
-splits = pipeline.split_last_year(df, colname='year_evictions')
+split_output_filename = 'results/time_splits/time_split_ay.csv'
+clf_output_filename = 'results/evaluation_results/clf-small-grid_ay.csv'
+reg_output_filename = 'results/evaluation_results/reg-small-grid_ay.csv'
+splits = pipeline.split_all_years(df, colname='year_evictions')
 
 split_table = pipeline.split_boundaries(splits, colname='year_evictions')
 split_table.to_csv(split_output_filename, index=False)
