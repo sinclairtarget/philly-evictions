@@ -39,11 +39,11 @@ def create_notebook(target):
 def task_train():
     """Trains models and saves results into results/ directory."""
     split_dir = 'results/time_splits'
-    split_target = split_dir + '/time_split_ly.csv'
+    split_target = split_dir + '/time_split_ay.csv'
 
     results_dir = 'results/evaluation_results'
-    clf_target = results_dir + '/clf-small-grid_ly.csv'
-    reg_target = results_dir + '/reg-small-grid_ly.csv'
+    clf_target = results_dir + '/clf-small-grid_ay.csv'
+    reg_target = results_dir + '/reg-small-grid_ay.csv'
 
     data_dep = 'data/final_merged_df.csv'
     notebook_dep = 'train.ipynb'
@@ -58,6 +58,25 @@ def task_train():
             clf_target,
             reg_target
         ],
+        'actions': [
+            'jupyter nbconvert --execute --to html'
+            f" --ExecutePreprocessor.timeout=86400 {notebook_dep}"
+        ]
+    }
+
+
+def task_evaluate():
+    """Evaluates best models."""
+    notebook_dep = 'evaluation.ipynb'
+    results_dir = 'results/evaluation_results'
+    clf_dep = results_dir + '/clf-small-grid_ay.csv'
+    reg_dep = results_dir + '/reg-small-grid_ay.csv'
+
+    yield create_notebook(notebook_dep)
+
+    yield {
+        'name': 'run',
+        'file_dep': [clf_dep, reg_dep],
         'actions': [
             'jupyter nbconvert --execute --to html'
             f" --ExecutePreprocessor.timeout=86400 {notebook_dep}"
