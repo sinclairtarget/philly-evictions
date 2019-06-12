@@ -12,4 +12,5 @@ df <- left_join(df.geo, df)
 ggplot(df) +
     geom_sf(aes(fill = label)) +
     ggtitle("Best Classifier: Top 14% Predictions - 2011")
-ggsave('results/2011/map.png')
+ggsave('results/2011/map.png', dpi=150)
+
