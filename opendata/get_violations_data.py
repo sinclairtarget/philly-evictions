@@ -32,4 +32,4 @@ violations_merge = geopandas.sjoin(violations_geo, evictions, how="inner", op='i
 #Reshape to get year- bloc_id - count of violations
 violations_grouped = violations_merge.groupby(['year','GEOID'])['violations_count'].sum().reset_index(name='violations_count')
 #Write out to csv
-violations_grouped.to_csv('data/violations.csv')
+violations_grouped.to_csv('../data/violations.csv')

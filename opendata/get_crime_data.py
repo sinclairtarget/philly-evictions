@@ -33,4 +33,4 @@ eviction_merge = geopandas.sjoin(crime_geo, evictions, how="inner", op='intersec
 eviction_grouped = eviction_merge.groupby(['year','GEOID'])['crime_count'].sum().reset_index(name='crime_count')
 
 #Write out to csv
-eviction_grouped.to_csv('data/crime_data.csv')
+eviction_grouped.to_csv('../data/crime_data.csv')
