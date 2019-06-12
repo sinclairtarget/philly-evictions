@@ -37,12 +37,12 @@ def label_df(df, lower_bound, **kwargs):
     return df
 
 
-def label_df_pct(df, pct, **kwargs):
+def label_df_pct(df, pct, sort_by_var, **kwargs):
     settings = _settings(kwargs)
     label_col = settings['label_col']
 
     df = df.copy() # Err, think about why this is needed later
-    df = df.sort_values('score', ascending=False)
+    df = df.sort_values(sort_by_var, ascending=False)
 
     cutoff_index = int(len(df) * (pct / 100.0))
     labels = [1 if i < cutoff_index else 0 for i in range(len(df))]
