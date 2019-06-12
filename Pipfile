@@ -20,6 +20,7 @@ jupyter = "*"
 census = "*"
 ipdb = "*"
 aequitas = "*"
+pydotplus = "*"
 
 [requires]
 python_version = "3.7"
