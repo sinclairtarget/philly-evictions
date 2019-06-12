@@ -63,24 +63,6 @@ To see all the tasks currently defined in the project, run:
 (philly-evictions) $ doit list
 ```
 
-### Jupytext
-[Jupytext](https://github.com/mwouts/jupytext) is a cool tool that allows you
-to save your Jupyter notebooks as Markdown files. This is great! Notebooks are
-usually saved as JSON files, which sucks, because JSON is for computers not
-humans. Commit your notebooks as Markdown files and it becomes so much easier
-to reason about the changes people are commiting via Git.
-
-`.ipynb` notebook files are ignored, so when you first check out the repo you
-need to generate the notebooks from the Markdown source files. To do this, run:
-```
-(philly-evictions) $ doit sync_proposal
-```
-
-This will generate a `.ipynb` notebook that you can edit normally using Jupyter
-notebook's web interface. When you save changes they automatically get saved to
-both the `.ipynb` file and the Markdown file. Git will only pick up the changes
-to the Markdown file.
-
 ## Downloading ACS Data
 You can download ACS data using two separate doit tasks.
 
